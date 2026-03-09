@@ -2,7 +2,7 @@ package com.czertainly.api.model.connector.secrets.content;
 
 import com.czertainly.api.model.connector.secrets.SecretType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data
@@ -13,7 +13,7 @@ import lombok.*;
 )
 public class GenericSecretContent extends SecretContent {
 
-    @NotNull
+    @NotBlank
     @ToString.Exclude
     @Schema(description = "Generic secret content encoded as Base64 string", requiredMode = Schema.RequiredMode.REQUIRED)
     private String content;
