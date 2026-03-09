@@ -20,13 +20,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateSecretRequestDto {
 
-    @NotNull
     @NotBlank
     @Schema(description = "Name of the secret", requiredMode = Schema.RequiredMode.REQUIRED, examples = {"MyServerCredentials"})
     private String name;
 
-    @NotNull
     @Valid
+    @NotNull
     @Schema(description = "Secret content", requiredMode = Schema.RequiredMode.REQUIRED)
     private SecretContent secret;
 
