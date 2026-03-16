@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Schema(
         title = "GenericSecretContent",
-        description = "Secret representing generic content encoded as Base64 string"
+        description = "Secret representing generic content represented as string"
 )
 public class GenericSecretContent extends SecretContent {
 

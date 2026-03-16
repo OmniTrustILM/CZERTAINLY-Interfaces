@@ -73,6 +73,6 @@ public interface VaultController extends AuthProtectedConnectorController {
             )
     })
     @PostMapping(path = "/vaultProfiles/attributes", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    List<BaseAttribute> listVaultProfileAttributes(@Parameter(description = "Vault profile attributes") @RequestBody List<RequestAttribute> attributes) throws NotFoundException;
+    List<BaseAttribute> listVaultProfileAttributes(@Parameter(description = "Vault attributes") @RequestBody List<RequestAttribute> attributes) throws NotFoundException;
 
 }
