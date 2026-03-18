@@ -30,6 +30,14 @@ import java.util.UUID;
 
 @RequestMapping("/v1/approvalProfiles")
 @Tag(name = "Approval profile Inventory", description = "Approval profile Inventory API")
+@ApiResponses(
+        value = {
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Not Found",
+                        content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))
+                )
+        })
 public interface ApprovalProfileController extends AuthProtectedController {
 
     @Operation(summary = "List Approval Profiles")
@@ -70,7 +78,7 @@ public interface ApprovalProfileController extends AuthProtectedController {
     void associateApprovalProfile(@Parameter(description = "Approval Profile UUID", required = true) @PathVariable UUID uuid, @Parameter(description = "Resource", required = true, example = Resource.Codes.RA_PROFILE) @PathVariable Resource resource, @Parameter(description = "Association object UUID", required = true) @PathVariable UUID associationObjectUuid) throws NotFoundException, AlreadyExistException;
 
     @Operation(operationId = "disassociateApprovalProfile", summary = "Disassociate Approval Profile from specified resource object")
-    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Resource object disassociation successful"), @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Resource object disassociation successful")})
     @DeleteMapping(path = "/{uuid}/associations/{resource}/{associationObjectUuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void disassociateApprovalProfile(@Parameter(description = "Approval Profile UUID", required = true) @PathVariable UUID uuid, @Parameter(description = "Resource", required = true, example = Resource.Codes.RA_PROFILE) @PathVariable Resource resource, @Parameter(description = "Association object UUID", required = true) @PathVariable UUID associationObjectUuid) throws NotFoundException;
