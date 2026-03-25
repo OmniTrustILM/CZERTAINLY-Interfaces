@@ -9,20 +9,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Arrays;
 
-/**
- * Signing Scheme defines the overall approach to signing, which can be either managed by ILM or delegated to an external service.
- * In addition, a managed signing scheme distinguishes between two types of signing:
- * 1. Signing by a static key pair
- * 2. Signing by a one-time key pair
- */
 @Schema(enumAsRef = true)
-public enum SigningScheme implements IPlatformEnum {
+public enum ManagedSigningType implements IPlatformEnum {
 
-    MANAGED(Codes.MANAGED, "Managed Signing", "ILM manages the signing workflow"),
-    DELEGATED(Codes.DELEGATED, "Delegated Signing", "ILM delegates the signing to an external signing service")
-    ;
+    STATIC_KEY(Codes.STATIC_KEY, "Static Key", "Signing uses a pre-existing static certificate and key pair"),
+    ONE_TIME_KEY(Codes.ONE_TIME_KEY, "One-Time Key", "Signing uses a freshly issued certificate and key pair per operation");
 
-    private static final SigningScheme[] VALUES;
+    private static final ManagedSigningType[] VALUES;
 
     static {
         VALUES = values();
@@ -32,19 +25,19 @@ public enum SigningScheme implements IPlatformEnum {
     private final String label;
     private final String description;
 
-    SigningScheme(String code, String label, String description) {
+    ManagedSigningType(String code, String label, String description) {
         this.code = code;
         this.label = label;
         this.description = description;
     }
 
     @JsonCreator
-    public static SigningScheme findByCode(String code) {
+    public static ManagedSigningType findByCode(String code) {
         return Arrays.stream(VALUES)
                 .filter(k -> k.code.equals(code))
                 .findFirst()
                 .orElseThrow(() ->
-                        new ValidationException(ValidationError.create("Unknown signing scheme {}", code)));
+                        new ValidationException(ValidationError.create("Unknown managed signing type {}", code)));
     }
 
     @Override
@@ -64,8 +57,8 @@ public enum SigningScheme implements IPlatformEnum {
     }
 
     public static class Codes {
-        public static final String MANAGED = "managed";
-        public static final String DELEGATED = "delegated";
+        public static final String STATIC_KEY = "staticKey";
+        public static final String ONE_TIME_KEY = "oneTimeKey";
 
         private Codes() {
         }
