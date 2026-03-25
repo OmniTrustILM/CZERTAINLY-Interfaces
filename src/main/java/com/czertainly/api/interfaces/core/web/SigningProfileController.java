@@ -1,0 +1,214 @@
+package com.czertainly.api.interfaces.core.web;
+
+import com.czertainly.api.exception.AlreadyExistException;
+import com.czertainly.api.exception.AttributeException;
+import com.czertainly.api.exception.NotFoundException;
+import com.czertainly.api.interfaces.AuthProtectedController;
+import com.czertainly.api.model.client.approvalprofile.ApprovalProfileDto;
+import com.czertainly.api.model.client.certificate.SearchRequestDto;
+import com.czertainly.api.model.common.BulkActionMessageDto;
+import com.czertainly.api.model.common.ErrorMessageDto;
+import com.czertainly.api.model.common.PaginationResponseDto;
+import com.czertainly.api.model.core.search.SearchFieldDataByGroupDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileCreateRequestDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileForVersionDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileListDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileUpdateRequestDto;
+import com.czertainly.api.model.core.signing.digitalsignature.DigitalSignatureListDto;
+import com.czertainly.api.model.core.signing.tsp.TspConfigurationDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.List;
+import java.util.UUID;
+
+@RequestMapping("/v1/signingProfiles")
+@Tag(name = "Signing Profile Management", description = "Signing Profile Management API")
+@ApiResponses(value = {@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))})
+public interface SigningProfileController extends AuthProtectedController {
+
+    @Operation(operationId = "listSigningProfileSearchableFields", summary = "List search filters for Signing Profiles")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of search filters retrieved")})
+    @GetMapping(path = "/search", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<SearchFieldDataByGroupDto> getSearchableFieldInformation();
+
+    @Operation(operationId = "listSigningProfiles", summary = "List of available Signing Profiles")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profiles retrieved")})
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    PaginationResponseDto<SigningProfileListDto> listSigningProfiles(@RequestBody SearchRequestDto request);
+
+    @Operation(operationId = "getSigningProfile", summary = "Details of a Signing Profile. If no specific version is provided, the latest version will be returned.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profile details retrieved")})
+    @GetMapping(path = "/{uuid}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    SigningProfileDto getSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid,
+                                            @Parameter(in = ParameterIn.QUERY, description = "Specific version of the Signing Profile") SigningProfileForVersionDto signingProfileForVersionDto) throws NotFoundException;
+
+    @Operation(operationId = "createSigningProfile", summary = "Add new Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New Signing Profile added"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    SigningProfileDto createSigningProfile(@RequestBody @Valid SigningProfileCreateRequestDto request) throws AlreadyExistException, AttributeException, NotFoundException;
+
+    @Operation(operationId = "updateSigningProfile", summary = "Update Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Signing Profile updated"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
+    @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    SigningProfileDto updateSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid, @RequestBody @Valid SigningProfileUpdateRequestDto request) throws NotFoundException, AttributeException;
+
+    @Operation(operationId = "deleteSigningProfile", summary = "Delete Signing Profile")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Signing Profile deleted")})
+    @DeleteMapping(path = "/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+
+    @Operation(operationId = "bulkDeleteSigningProfiles", summary = "Delete multiple Signing Profiles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Signing Profiles deleted"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}))})
+    @DeleteMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BulkActionMessageDto> bulkDeleteSigningProfiles(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Signing Profile UUIDs", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"c2f685d4-6a3e-11ec-90d6-0242ac120003\",\"b9b09548-a97c-4c6a-a06a-e4ee6fc2da98\"]")})) @RequestBody List<UUID> uuids);
+
+    @Operation(operationId = "enableSigningProfile", summary = "Enable Signing Profile")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Signing Profile enabled")})
+    @PatchMapping(path = "/{uuid}/enable", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void enableSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+
+    @Operation(operationId = "bulkEnableSigningProfiles", summary = "Enable multiple Signing Profiles")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profiles enabled")})
+    @PatchMapping(path = "/enable", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BulkActionMessageDto> bulkEnableSigningProfiles(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Signing Profile UUIDs", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"c2f685d4-6a3e-11ec-90d6-0242ac120003\",\"b9b09548-a97c-4c6a-a06a-e4ee6fc2da98\"]")})) @RequestBody List<UUID> uuids);
+
+    @Operation(operationId = "disableSigningProfile", summary = "Disable Signing Profile")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Signing Profile disabled")})
+    @PatchMapping(path = "/{uuid}/disable", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void disableSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+
+    @Operation(operationId = "bulkDisableSigningProfiles", summary = "Disable multiple Signing Profiles")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profiles disabled")})
+    @PatchMapping(path = "/disable", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BulkActionMessageDto> bulkDisableSigningProfiles(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Signing Profile UUIDs", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"c2f685d4-6a3e-11ec-90d6-0242ac120003\",\"b9b09548-a97c-4c6a-a06a-e4ee6fc2da98\"]")})) @RequestBody List<UUID> uuids);
+
+    @Operation(operationId = "getAssociatedApprovalProfiles", summary = "List of Approval Profiles associated with the Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Approval Profiles retrieved"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @GetMapping(path = "/{uuid}/approvalProfiles", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<ApprovalProfileDto> getAssociatedApprovalProfiles(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+
+    @Operation(operationId = "associateWithApprovalProfile", summary = "Associate Signing Profile with the Approval Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Approval Profile associated with the Signing Profile"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile or Approval Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PatchMapping(path = "/{signingProfileUuid}/approvalProfiles/{approvalProfileUuid}", produces = {"application/json"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void associateWithApprovalProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
+                                      @Parameter(description = "Approval Profile UUID") @PathVariable UUID approvalProfileUuid) throws NotFoundException;
+
+    @Operation(operationId = "disassociateFromApprovalProfile", summary = "Disassociate Signing Profile with the Approval Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Approval Profile disassociated from the the Signing Profile"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile or Approval Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @DeleteMapping(path = "/{signingProfileUuid}/approvalProfiles/{approvalProfileUuid}", produces = {"application/json"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void disassociateFromApprovalProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
+                                         @Parameter(description = "Approval Profile UUID") @PathVariable UUID approvalProfileUuid) throws NotFoundException;
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Digital Signatures
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Operation(
+            operationId = "listDigitalSignaturesForSigningProfile",
+            summary = "List Digital Signatures produced under a Signing Profile",
+            description = "Returns a paginated, filterable list of all Digital Signatures that were produced " +
+                    "using this Signing Profile. Supports the same search and pagination parameters as " +
+                    "the top-level Digital Signatures listing."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Digital Signatures retrieved"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PostMapping(path = "/{uuid}/digitalSignatures", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    PaginationResponseDto<DigitalSignatureListDto> listDigitalSignaturesForSigningProfile(
+            @Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid,
+            @RequestBody SearchRequestDto request
+    ) throws NotFoundException;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Protocols
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Operation(operationId = "activateIlmSigningProtocol", summary = "Activate ILM Signing Protocol for Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "ILM Signing Protocol activated"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PatchMapping(
+            path = "/{signingProfileUuid}/protocols/ilm/activate/{ilmSigningProtocolConfigurationUuid}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void activateIlmSigningProtocol(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
+                                    @Parameter(description = "ILM Signing Protocol Configuration UUID") @PathVariable UUID ilmSigningProtocolConfigurationUuid) throws NotFoundException;
+
+    @Operation(operationId = "deactivateIlmSigningProtocol", summary = "Deactivate ILM Signing Protocol for Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "ILM Signing Protocol deactivated"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PatchMapping(path = "/{uuid}/protocols/ilm/deactivate", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deactivateIlmSigningProtocol(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+
+    @Operation(operationId = "activateTsp", summary = "Activate TSP for Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "TSP activated"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PatchMapping(
+            path = "/{signingProfileUuid}/protocols/tsp/activate/{tspConfigurationUuid}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void activateTsp(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
+                     @Parameter(description = "TSP Configuration UUID") @PathVariable UUID tspConfigurationUuid) throws NotFoundException;
+
+    @Operation(operationId = "deactivateTsp", summary = "Deactivate TSP for Signing Profile")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "TSP deactivated"),
+            @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @PatchMapping(path = "/{uuid}/protocols/tsp/deactivate", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deactivateTsp(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+}

@@ -1,7 +1,7 @@
 package com.czertainly.api.model.core.signing.digitalsignature;
 
 import com.czertainly.api.model.common.NameAndUuidDto;
-import com.czertainly.api.model.core.signing.signatureprofile.SignatureProfileListDto;
+import com.czertainly.api.model.core.signing.signingprofile.SigningProfileListDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,8 +15,8 @@ import java.time.ZonedDateTime;
 @Schema(name = "DigitalSignatureListDto", description = "Digital Signature details for listing")
 public class DigitalSignatureListDto extends NameAndUuidDto {
 
-    @Schema(description = "Signature Profile used to produce this Digital Signature", requiredMode = Schema.RequiredMode.REQUIRED)
-    private SignatureProfileListDto signatureProfile;
+    @Schema(description = "Signing Profile used to produce this Digital Signature", requiredMode = Schema.RequiredMode.REQUIRED)
+    private SigningProfileListDto signingProfile;
 
     @Schema(
             description = "Claimed signing time embedded in the signature structure by the signing operation. " +
