@@ -49,7 +49,7 @@ public interface TspConfigurationController extends AuthProtectedController {
 
     @Operation(operationId = "listTspConfigurations", summary = "List of available TSP Configurations")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "TSP Configurations retrieved")})
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = "/list", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     PaginationResponseDto<TspConfigurationListDto> listTspConfigurations(@RequestBody SearchRequestDto request);
 
     @Operation(operationId = "getTspConfiguration", summary = "Details of a TSP Configuration")

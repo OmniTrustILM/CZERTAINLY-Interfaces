@@ -55,14 +55,14 @@ public interface SigningProfileController extends AuthProtectedController {
 
     @Operation(operationId = "listSigningProfiles", summary = "List of available Signing Profiles")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profiles retrieved")})
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = "/list", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     PaginationResponseDto<SigningProfileListDto> listSigningProfiles(@RequestBody SearchRequestDto request);
 
     @Operation(operationId = "getSigningProfile", summary = "Details of a Signing Profile. If no specific version is provided, the latest version will be returned.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profile details retrieved")})
     @GetMapping(path = "/{uuid}", produces = {MediaType.APPLICATION_JSON_VALUE})
     SigningProfileDto getSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid,
-                                            @Parameter(in = ParameterIn.QUERY, description = "Specific version of the Signing Profile") SigningProfileForVersionDto signingProfileForVersionDto) throws NotFoundException;
+                                        @Parameter(in = ParameterIn.QUERY, description = "Specific version of the Signing Profile") SigningProfileForVersionDto signingProfileForVersionDto) throws NotFoundException;
 
     @Operation(operationId = "createSigningProfile", summary = "Add new Signing Profile")
     @ApiResponses(value = {

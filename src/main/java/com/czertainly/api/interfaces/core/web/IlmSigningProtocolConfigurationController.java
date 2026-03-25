@@ -49,7 +49,7 @@ public interface IlmSigningProtocolConfigurationController extends AuthProtected
 
     @Operation(operationId = "listIlmSigningProtocolConfigurations", summary = "List of available ILM Signing Protocol Configurations")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "ILM Signing Protocol Configurations retrieved")})
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(path = "/list", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     PaginationResponseDto<IlmSigningProtocolConfigurationListDto> listIlmSigningProtocolConfigurations(@RequestBody SearchRequestDto request);
 
     @Operation(operationId = "getIlmSigningProtocolConfiguration", summary = "Details of an ILM Signing Protocol Configuration")

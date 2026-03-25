@@ -30,7 +30,7 @@ public class StaticKeyManagedSigningDto extends ManagedSigningDto {
     private NameAndUuidDto cryptographicKey;
 
     @NotNull
-    @Schema(description = "List of attributes required for signing operations (such as digest algorithm), provided by the Cryprography Provider Connector",
+    @Schema(description = "List of attributes required for signing operations (such as digest algorithm), provided by the Cryptography Provider Connector",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ResponseAttribute> attributes = new ArrayList<>();
 
