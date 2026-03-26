@@ -1,7 +1,7 @@
 package com.czertainly.api.model.core.signing.digitalsignature;
 
 import com.czertainly.api.model.common.NameAndUuidDto;
-import com.czertainly.api.model.core.signing.signingprofile.SigningProfileListDto;
+import com.czertainly.api.model.client.signing.profile.SigningProfileListDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
