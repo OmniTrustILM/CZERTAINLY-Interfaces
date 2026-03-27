@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @Schema(name = "OneTimeKeyManagedSigningRequestDto",
         description = "Request to configure managed signing with a one-time certificate issuance")
+@ToString(callSuper = true)
 public class OneTimeKeyManagedSigningRequestDto extends ManagedSigningRequestDto {
 
     @NotNull

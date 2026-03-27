@@ -1,6 +1,5 @@
 package com.czertainly.api.interfaces.core.web;
 
-import com.czertainly.api.exception.AlreadyExistException;
 import com.czertainly.api.exception.AttributeException;
 import com.czertainly.api.exception.NotFoundException;
 import com.czertainly.api.interfaces.AuthProtectedController;
@@ -74,7 +73,7 @@ public interface SigningProfileController extends AuthProtectedController {
     })
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    SigningProfileDto createSigningProfile(@RequestBody @Valid SigningProfileCreateRequestDto request) throws AlreadyExistException, AttributeException, NotFoundException;
+    SigningProfileDto createSigningProfile(@RequestBody @Valid SigningProfileCreateRequestDto request) throws AttributeException, NotFoundException;
 
     @Operation(operationId = "updateSigningProfile", summary = "Update Signing Profile")
     @ApiResponses(value = {

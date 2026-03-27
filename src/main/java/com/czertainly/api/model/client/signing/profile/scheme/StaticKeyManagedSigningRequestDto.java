@@ -1,6 +1,6 @@
 package com.czertainly.api.model.client.signing.profile.scheme;
 
-import com.czertainly.api.model.client.attribute.ResponseAttribute;
+import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @Schema(name = "StaticKeyManagedSigningRequestDto",
         description = "Request to configure managed signing with a static Token Profile and Cryptographic Key")
+@ToString(callSuper = true)
 public class StaticKeyManagedSigningRequestDto extends ManagedSigningRequestDto {
 
     @NotNull
@@ -32,7 +34,7 @@ public class StaticKeyManagedSigningRequestDto extends ManagedSigningRequestDto 
     @NotNull
     @Schema(description = "List of attributes required for signing operations (such as digest algorithm), provided by the Cryptography Provider Connector",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<ResponseAttribute> attributes = new ArrayList<>();
+    private List<RequestAttribute> attributes = new ArrayList<>();
 
     public StaticKeyManagedSigningRequestDto() {
         super(ManagedSigningType.STATIC_KEY);

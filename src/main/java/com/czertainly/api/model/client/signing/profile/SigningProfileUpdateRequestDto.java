@@ -20,7 +20,6 @@ If there are existing Digital Signatures produced using this Signing Profile, cr
 Otherwise updates the latest version in-place.
 """)
 public class SigningProfileUpdateRequestDto {
-
     @NotBlank
     @Schema(description = "Name of the Signing Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "SigningProfile-1")
     private String name;
@@ -41,7 +40,7 @@ public class SigningProfileUpdateRequestDto {
     @NotNull
     @Valid
     @Schema(description = "Workflow-type-specific configuration.", requiredMode = Schema.RequiredMode.REQUIRED)
-    private WorkflowRequestDto workflowConfiguration;
+    private WorkflowRequestDto workflow;
 
     @Schema(description = "List of Custom Attributes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<RequestAttribute> customAttributes = new ArrayList<>();

@@ -8,6 +8,7 @@ import com.czertainly.api.model.client.signing.profile.workflow.WorkflowDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "SigningProfileDto", description = "Signing Profile detail")
+@ToString(callSuper = true)
 public class SigningProfileDto extends NameAndUuidDto {
 
     @Schema(description = "Description of the Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

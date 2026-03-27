@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @Schema(name = "SigningProfileCreateRequestDto", description = "Request to create a new Signing Profile")
 public class SigningProfileCreateRequestDto {
-
     @NotBlank
     @Schema(description = "Name of the Signing Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "SigningProfile-1")
     private String name;

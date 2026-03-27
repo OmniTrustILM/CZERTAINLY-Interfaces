@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @JsonDeserialize(using = JsonDeserializer.None.class)
 @Schema(name = "StaticKeyManagedSigningDto",
         description = "Managed signing using a pre-existing static cryptographic key")
+@ToString(callSuper = true)
 public class StaticKeyManagedSigningDto extends ManagedSigningDto {
 
     @NotNull

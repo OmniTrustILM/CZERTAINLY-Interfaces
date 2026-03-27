@@ -17,5 +17,5 @@ public class IlmSigningProtocolConfigurationListDto extends NameAndUuidDto {
     private String description;
 
     @Schema(description = "Default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
-    private SimplifiedSigningProfileDto signingProfile;
+    private SimplifiedSigningProfileDto defaultSigningProfile;
 }

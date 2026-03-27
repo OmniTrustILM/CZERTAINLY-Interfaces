@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Schema(name = "DelegatedSigningDto", description = "Delegated signing configuration with Connector and attributes")
+@ToString(callSuper = true)
 public class DelegatedSigningDto extends SigningSchemeDto {
 
     @NotNull

@@ -1,6 +1,5 @@
 package com.czertainly.api.interfaces.core.web;
 
-import com.czertainly.api.exception.AlreadyExistException;
 import com.czertainly.api.exception.AttributeException;
 import com.czertainly.api.exception.NotFoundException;
 import com.czertainly.api.interfaces.AuthProtectedController;
@@ -66,7 +65,7 @@ public interface TspConfigurationController extends AuthProtectedController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    TspConfigurationDto createTspConfiguration(@RequestBody @Valid TspConfigurationCreateRequestDto request) throws AlreadyExistException, AttributeException;
+    TspConfigurationDto createTspConfiguration(@RequestBody @Valid TspConfigurationCreateRequestDto request) throws AttributeException, NotFoundException;
 
     @Operation(operationId = "updateTspConfiguration", summary = "Update TSP Configuration")
     @ApiResponses(value = {

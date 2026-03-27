@@ -21,7 +21,7 @@ public class TspConfigurationCreateRequestDto {
     private String description;
 
     @Schema(description = "UUID of the default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
-    private UUID signingProfileUuid;
+    private UUID defaultSigningProfileUuid;
 
     @Schema(description = "List of Custom Attributes", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<RequestAttribute> customAttributes = new ArrayList<>();
