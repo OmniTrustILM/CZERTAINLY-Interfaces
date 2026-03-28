@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Schema(name = "IlmSigningProtocolConfigurationUpdateRequestDto", description = "Request to update an Internal ILM Signing Protocol Configuration")
-public class IlmSigningProtocolConfigurationUpdateRequestDto {
+@Schema(name = "IlmSigningProtocolConfigurationRequestDto", description = "Request to create or update an ILM Signing Protocol Configuration")
+public class IlmSigningProtocolConfigurationRequestDto {
 
     @NotBlank
-    @Schema(description = "Name of the ILM Signing Protocol Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "ILM-Signing-1")
+    @Schema(description = "Name of the ILM Signing Protocol Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "ILM-Config-1")
     private String name;
 
     @Schema(description = "Description of the ILM Signing Protocol Configuration", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "ILM signing protocol configuration for production")

@@ -4,14 +4,13 @@ import com.czertainly.api.exception.AttributeException;
 import com.czertainly.api.exception.NotFoundException;
 import com.czertainly.api.interfaces.AuthProtectedController;
 import com.czertainly.api.model.client.certificate.SearchRequestDto;
+import com.czertainly.api.model.client.signing.protocols.ilm.IlmSigningProtocolConfigurationRequestDto;
 import com.czertainly.api.model.common.BulkActionMessageDto;
 import com.czertainly.api.model.common.ErrorMessageDto;
 import com.czertainly.api.model.common.PaginationResponseDto;
 import com.czertainly.api.model.core.search.SearchFieldDataByGroupDto;
-import com.czertainly.api.model.client.signing.protocols.ilm.IlmSigningProtocolConfigurationCreateRequestDto;
 import com.czertainly.api.model.client.signing.protocols.ilm.IlmSigningProtocolConfigurationDto;
 import com.czertainly.api.model.client.signing.protocols.ilm.IlmSigningProtocolConfigurationListDto;
-import com.czertainly.api.model.client.signing.protocols.ilm.IlmSigningProtocolConfigurationUpdateRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -65,14 +64,14 @@ public interface IlmSigningProtocolConfigurationController extends AuthProtected
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    IlmSigningProtocolConfigurationDto createIlmSigningProtocolConfiguration(@RequestBody @Valid IlmSigningProtocolConfigurationCreateRequestDto request) throws AttributeException, NotFoundException;
+    IlmSigningProtocolConfigurationDto createIlmSigningProtocolConfiguration(@RequestBody @Valid IlmSigningProtocolConfigurationRequestDto request) throws AttributeException, NotFoundException;
 
     @Operation(operationId = "updateIlmSigningProtocolConfiguration", summary = "Update ILM Signing Protocol Configuration")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ILM Signing Protocol Configuration updated"),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    IlmSigningProtocolConfigurationDto updateIlmSigningProtocolConfiguration(@Parameter(description = "ILM Signing Protocol Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid IlmSigningProtocolConfigurationUpdateRequestDto request) throws NotFoundException, AttributeException;
+    IlmSigningProtocolConfigurationDto updateIlmSigningProtocolConfiguration(@Parameter(description = "ILM Signing Protocol Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid IlmSigningProtocolConfigurationRequestDto request) throws NotFoundException, AttributeException;
 
     @Operation(operationId = "deleteIlmSigningProtocolConfiguration", summary = "Delete ILM Signing Protocol Configuration")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "ILM Signing Protocol Configuration deleted")})

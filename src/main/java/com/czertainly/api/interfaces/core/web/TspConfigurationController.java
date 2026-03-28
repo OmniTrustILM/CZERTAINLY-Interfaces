@@ -8,10 +8,9 @@ import com.czertainly.api.model.common.BulkActionMessageDto;
 import com.czertainly.api.model.common.ErrorMessageDto;
 import com.czertainly.api.model.common.PaginationResponseDto;
 import com.czertainly.api.model.core.search.SearchFieldDataByGroupDto;
-import com.czertainly.api.model.client.signing.protocols.tsp.TspConfigurationCreateRequestDto;
+import com.czertainly.api.model.client.signing.protocols.tsp.TspConfigurationRequestDto;
 import com.czertainly.api.model.client.signing.protocols.tsp.TspConfigurationDto;
 import com.czertainly.api.model.client.signing.protocols.tsp.TspConfigurationListDto;
-import com.czertainly.api.model.client.signing.protocols.tsp.TspConfigurationUpdateRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -65,14 +64,14 @@ public interface TspConfigurationController extends AuthProtectedController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    TspConfigurationDto createTspConfiguration(@RequestBody @Valid TspConfigurationCreateRequestDto request) throws AttributeException, NotFoundException;
+    TspConfigurationDto createTspConfiguration(@RequestBody @Valid TspConfigurationRequestDto request) throws AttributeException, NotFoundException;
 
     @Operation(operationId = "updateTspConfiguration", summary = "Update TSP Configuration")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TSP Configuration updated"),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    TspConfigurationDto updateTspConfiguration(@Parameter(description = "TSP Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid TspConfigurationUpdateRequestDto request) throws NotFoundException, AttributeException;
+    TspConfigurationDto updateTspConfiguration(@Parameter(description = "TSP Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid TspConfigurationRequestDto request) throws NotFoundException, AttributeException;
 
     @Operation(operationId = "deleteTspConfiguration", summary = "Delete TSP Configuration")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "TSP Configuration deleted")})

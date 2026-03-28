@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Schema(name = "TspConfigurationCreateRequestDto", description = "Request to create a new TSP (Timestamping Protocol) Configuration")
-public class TspConfigurationCreateRequestDto {
+@Schema(name = "TspConfigurationRequestDto", description = "Request to create or update a TSP (Timestamping Protocol) Configuration")
+public class TspConfigurationRequestDto {
 
     @NotBlank
     @Schema(description = "Name of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "TSP-Config-1")

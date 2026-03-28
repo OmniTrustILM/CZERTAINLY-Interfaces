@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Schema(name = "SigningProfileCreateRequestDto", description = "Request to create a new Signing Profile")
-public class SigningProfileCreateRequestDto {
+@Schema(name = "SigningProfileRequestDto", description = "Request to create or update a Signing Profile")
+public class SigningProfileRequestDto {
     @NotBlank
     @Schema(description = "Name of the Signing Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "SigningProfile-1")
     private String name;
