@@ -1,0 +1,27 @@
+package com.czertainly.api.interfaces.core.tsp.error;
+
+import lombok.Getter;
+
+/**
+ * Thrown when a RFC 3161 timestamp request cannot be fulfilled.
+ * Carries a {@link TspFailureInfo} so the Core implementation can produce
+ * a correctly coded PKIFailureInfo in the rejection TimeStampResp.
+ *
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc3161#section-2.4.2">RFC 3161 section 2.4.2</a>
+ */
+@Getter
+public class TspException extends Exception {
+
+    private final TspFailureInfo failureInfo;
+
+    public TspException(TspFailureInfo failureInfo, String message) {
+        super(message);
+        this.failureInfo = failureInfo;
+    }
+
+    public TspException(TspFailureInfo failureInfo, String message, Throwable cause) {
+        super(message, cause);
+        this.failureInfo = failureInfo;
+    }
+
+}
