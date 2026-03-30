@@ -4,6 +4,7 @@ import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.client.signing.profile.scheme.SigningSchemeRequestDto;
 import com.czertainly.api.model.client.signing.profile.workflow.WorkflowRequestDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.czertainly.api.model.common.validation.ValidName;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import java.util.List;
 @Schema(name = "SigningProfileRequestDto", description = "Request to create or update a Signing Profile")
 public class SigningProfileRequestDto {
     @NotBlank
+    @ValidName
     @Schema(description = "Name of the Signing Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "SigningProfile-1")
     private String name;
 

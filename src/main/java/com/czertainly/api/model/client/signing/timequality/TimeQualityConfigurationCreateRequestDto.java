@@ -1,9 +1,10 @@
 package com.czertainly.api.model.client.signing.timequality;
 
 import com.czertainly.api.model.client.attribute.RequestAttribute;
-import io.swagger.v3.oas.annotations.media.Schema;
 import com.czertainly.api.model.client.signing.timequality.validation.PositiveDuration;
 import com.czertainly.api.model.client.signing.timequality.validation.ValidHostnameList;
+import com.czertainly.api.model.common.validation.ValidName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.List;
 public class TimeQualityConfigurationCreateRequestDto {
 
     @NotBlank
+    @ValidName
     @Schema(description = "Name of the Time Quality Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "NTP-Config-1")
     private String name;
 

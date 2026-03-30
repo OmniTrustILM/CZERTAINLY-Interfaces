@@ -1,6 +1,7 @@
 package com.czertainly.api.model.client.signing.protocols.tsp;
 
 import com.czertainly.api.model.client.attribute.RequestAttribute;
+import com.czertainly.api.model.common.validation.ValidName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class TspConfigurationRequestDto {
 
     @NotBlank
+    @ValidName
     @Schema(description = "Name of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "TSP-Config-1")
     private String name;
 
