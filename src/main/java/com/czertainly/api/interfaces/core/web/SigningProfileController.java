@@ -6,6 +6,8 @@ import com.czertainly.api.interfaces.AuthProtectedController;
 import com.czertainly.api.model.client.approvalprofile.ApprovalProfileDto;
 import com.czertainly.api.model.client.certificate.SearchRequestDto;
 import com.czertainly.api.model.client.signing.profile.SigningProfileRequestDto;
+import com.czertainly.api.model.client.signing.profile.workflow.SigningWorkflowType;
+import com.czertainly.api.model.core.signing.SigningProtocol;
 import com.czertainly.api.model.common.BulkActionMessageDto;
 import com.czertainly.api.model.common.ErrorMessageDto;
 import com.czertainly.api.model.common.PaginationResponseDto;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
@@ -50,6 +53,13 @@ public interface SigningProfileController extends AuthProtectedController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of search filters retrieved")})
     @GetMapping(path = "/search", produces = {MediaType.APPLICATION_JSON_VALUE})
     List<SearchFieldDataByGroupDto> getSearchableFieldInformation();
+
+    @Operation(operationId = "listSupportedProtocols", summary = "List signing protocols supported for a given workflow type")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Supported protocols retrieved")})
+    @GetMapping(path = "/supportedProtocols", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<SigningProtocol> listSupportedProtocols(
+            @Parameter(description = "Signing workflow type code (e.g. 'timestamping')", required = true, schema = @Schema(implementation = SigningWorkflowType.class))
+            @RequestParam String workflowType);
 
     @Operation(operationId = "listSigningProfiles", summary = "List of available Signing Profiles")
     @ApiResponses(value = {
