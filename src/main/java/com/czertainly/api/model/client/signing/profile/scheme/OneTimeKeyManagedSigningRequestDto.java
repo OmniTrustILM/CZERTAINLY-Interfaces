@@ -1,6 +1,6 @@
 package com.czertainly.api.model.client.signing.profile.scheme;
 
-import com.czertainly.api.model.client.attribute.ResponseAttribute;
+import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -41,7 +41,7 @@ public class OneTimeKeyManagedSigningRequestDto extends ManagedSigningRequestDto
     @NotNull
     @Schema(description = "List of attributes required for signing operations (such as digest algorithm), provided by the Cryptography Provider Connector",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<ResponseAttribute> attributes = new ArrayList<>();
+    private List<RequestAttribute> signingOperationAttributes = new ArrayList<>();
 
     public OneTimeKeyManagedSigningRequestDto() {
         super(ManagedSigningType.ONE_TIME_KEY);

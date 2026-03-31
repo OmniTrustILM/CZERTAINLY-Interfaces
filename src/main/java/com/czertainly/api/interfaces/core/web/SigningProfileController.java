@@ -73,7 +73,7 @@ public interface SigningProfileController extends AuthProtectedController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profile details retrieved")})
     @GetMapping(path = "/{uuid}", produces = {MediaType.APPLICATION_JSON_VALUE})
     SigningProfileDto getSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid,
-                                        @Parameter(in = ParameterIn.QUERY, description = "Specific version of the Signing Profile") Integer version) throws NotFoundException;
+                                        @Parameter(in = ParameterIn.QUERY, description = "Specific version of the Signing Profile") @RequestParam(required = false) Integer version) throws NotFoundException;
 
     @Operation(operationId = "createSigningProfile", summary = "Add new Signing Profile")
     @ApiResponses(value = {
@@ -114,7 +114,10 @@ public interface SigningProfileController extends AuthProtectedController {
     void enableSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
 
     @Operation(operationId = "bulkEnableSigningProfiles", summary = "Enable multiple Signing Profiles")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Signing Profiles enabled")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Signing Profiles enabled"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}))
+    })
     @PatchMapping(path = "/enable", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     List<BulkActionMessageDto> bulkEnableSigningProfiles(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Signing Profile UUIDs", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"c2f685d4-6a3e-11ec-90d6-0242ac120003\",\"b9b09548-a97c-4c6a-a06a-e4ee6fc2da98\"]")})) @RequestBody List<UUID> uuids);
 

@@ -20,6 +20,9 @@ public class TspConfigurationDto extends NameAndUuidDto {
     @Schema(description = "Description of the TSP Configuration", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP configuration for production timestamping")
     private String description;
 
+    @Schema(description = "Enabled flag of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
+    private boolean enabled;
+
     @Schema(description = "Default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
     private SimplifiedSigningProfileDto defaultSigningProfile;
 
