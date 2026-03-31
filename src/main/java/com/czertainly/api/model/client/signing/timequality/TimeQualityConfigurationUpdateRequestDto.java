@@ -44,11 +44,11 @@ public class TimeQualityConfigurationUpdateRequestDto {
 
     @Positive
     @Schema(description = "Minimum number of NTP servers that must be reachable", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", defaultValue = "1")
-    private int minReachable = 1;
+    private int ntpServersMinReachable = 1;
 
     @PositiveDuration
     @Schema(description = "Maximum allowed clock drift from NTP reference time, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "PT1S", defaultValue = "PT1S")
-    private Duration maxDrift = Duration.ofSeconds(1);
+    private Duration maxClockDrift = Duration.ofSeconds(1);
 
     @Schema(description = "Whether to guard against leap second anomalies", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "true", defaultValue = "true")
     private boolean leapSecondGuard = true;
