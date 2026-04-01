@@ -7,6 +7,7 @@ import com.czertainly.api.model.client.approvalprofile.ApprovalProfileDto;
 import com.czertainly.api.model.client.certificate.SearchRequestDto;
 import com.czertainly.api.model.client.signing.profile.SigningProfileRequestDto;
 import com.czertainly.api.model.client.signing.profile.workflow.SigningWorkflowType;
+import com.czertainly.api.model.core.certificate.CertificateDto;
 import com.czertainly.api.model.core.signing.SigningProtocol;
 import com.czertainly.api.model.common.BulkActionMessageDto;
 import com.czertainly.api.model.common.ErrorMessageDto;
@@ -163,6 +164,10 @@ public interface SigningProfileController extends AuthProtectedController {
     void disassociateFromApprovalProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
                                          @Parameter(description = "Approval Profile UUID") @PathVariable UUID approvalProfileUuid) throws NotFoundException;
 
+    @Operation(operationId = "listSigningCertificates", summary = "Get list of certificates eligible to be used for digital signing")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of certificates retrieved")})
+    @GetMapping(path = "/signingCertificates", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<CertificateDto> listSigningCertificates(@Parameter(description = "Signing Workflow Type") @RequestParam SigningWorkflowType signingWorkflowType);
 
     // -----------------------------------------------------------------------------------------------------------------
     // Digital Signatures
