@@ -17,7 +17,9 @@ public enum FeatureFlag implements IPlatformEnum {
     STATELESS("stateless", "Stateless", "A stateless connector does not require persistence layer (e.g. database)"),
     OPEN_METRICS("openMetrics", "OpenMetrics", "Metrics are exposed in OpenMetrics format", List.of(ConnectorInterface.METRICS)),
     SECRET_VERSIONING("secretVersioning", "Secret Versioning", "Supports versioning of secrets, allowing to keep track of history of secrets.", List.of(ConnectorInterface.SECRET)),
-    SECRET_ROTATION("secretRotation", "Secret Rotation", "Supports triggering rotation of secrets", List.of(ConnectorInterface.SECRET));
+    SECRET_ROTATION("secretRotation", "Secret Rotation", "Supports triggering rotation of secrets", List.of(ConnectorInterface.SECRET)),
+    KEY_IMPORT("keyImport", "Key Import", "Supports importing a key pair into the token from a PKCS#12 bundle", List.of(ConnectorInterface.CRYPTOGRAPHY)),
+    KEY_EXPORT("keyExport", "Key Export", "Supports exporting a private key from the token as raw material for PKCS#12 assembly", List.of(ConnectorInterface.CRYPTOGRAPHY));
 
     private static final FeatureFlag[] VALUES;
 

@@ -6,6 +6,9 @@ import com.czertainly.api.interfaces.AuthProtectedConnectorController;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.connector.cryptography.key.CreateKeyRequestDto;
+import com.czertainly.api.model.connector.cryptography.key.ExportKeyRequestDto;
+import com.czertainly.api.model.connector.cryptography.key.ExportKeyResponseDto;
+import com.czertainly.api.model.connector.cryptography.key.ImportKeyPairRequestDto;
 import com.czertainly.api.model.connector.cryptography.key.KeyDataResponseDto;
 import com.czertainly.api.model.connector.cryptography.key.KeyPairDataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,7 +67,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @PostMapping(
@@ -80,7 +84,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
      */
     void validateCreateSecretKeyAttributes(
             @Parameter(description = "Token instance UUID") @PathVariable String uuid,
-            @RequestBody List<RequestAttribute>attributes
+            @RequestBody List<RequestAttribute> attributes
     ) throws NotFoundException, ValidationException;
 
     @Operation(
@@ -96,7 +100,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @PostMapping(
@@ -146,7 +150,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @PostMapping(
@@ -163,7 +167,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
      */
     void validateCreateKeyPairAttributes(
             @Parameter(description = "Token instance UUID") @PathVariable String uuid,
-            @RequestBody List<RequestAttribute>attributes
+            @RequestBody List<RequestAttribute> attributes
     ) throws NotFoundException, ValidationException;
 
     @Operation(
@@ -179,7 +183,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @PostMapping(
@@ -208,7 +212,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @GetMapping(
@@ -234,7 +238,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @GetMapping(
@@ -262,7 +266,7 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
                             responseCode = "422",
                             description = "Unprocessable Entity",
                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
-                                    examples={@ExampleObject(value="[\"Error Message 1\",\"Error Message 2\"]")}
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
                             ))
             })
     @DeleteMapping(
@@ -278,5 +282,120 @@ public interface KeyManagementController extends AuthProtectedConnectorControlle
             @Parameter(description = "Token instance UUID") @PathVariable String uuid,
             @Parameter(description = "Key UUID") @PathVariable String keyUuid
     ) throws NotFoundException;
+
+    // ── IMPORT (optional) ─────────────────────────────────────────────────────
+    //
+    // Key pair import is an optional capability. The KEY_IMPORT FeatureFlag (v2 Info) lets the Connector express the support.
+
+    @Operation(
+            summary = "List of Attributes to import a Cryptographic Key Pair",
+            description = "This endpoint is optional. Connectors that do not support key pair import must return HTTP 501."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "List of Attributes retrieved"),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key pair import.")
+            })
+    @GetMapping(path = "/import/attributes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BaseAttribute> listImportKeyPairAttributes(@Parameter(description = "Token instance UUID") @PathVariable String uuid) throws NotFoundException;
+
+    @Operation(
+            summary = "Validate list of Attributes to import a Cryptographic Key Pair",
+            description = "This endpoint is optional. Connectors that do not support key pair import must return HTTP 501."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "Attributes validated"),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Unprocessable Entity",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
+                            )),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key pair import.")
+            })
+    @PostMapping(path = "/import/attributes/validate", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    void validateImportKeyPairAttributes(@Parameter(description = "Token instance UUID") @PathVariable String uuid,
+                                         @RequestBody List<RequestAttribute> attributes) throws NotFoundException, ValidationException;
+
+    @Operation(
+            summary = "Import a Cryptographic Key Pair into the token",
+            description = "This endpoint is optional. Connectors that do not support key pair import must return HTTP 501."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Key pair imported"),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Unprocessable Entity",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
+                            )),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key pair import.")
+            })
+    @PostMapping(path = "/import", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    KeyPairDataResponseDto importKeyPair(@Parameter(description = "Token instance UUID") @PathVariable String uuid,
+                                         @RequestBody ImportKeyPairRequestDto request) throws NotFoundException, ValidationException;
+
+    // ── EXPORT (optional) ─────────────────────────────────────────────────────
+    //
+    // Key export is an optional capability. The KEY_EXPORT FeatureFlag (v2 Info) lets the Connector express the support.
+
+    @Operation(
+            summary = "List of Attributes to export a Cryptographic Key",
+            description = "This endpoint is optional. Connectors that do not support key export must return HTTP 501."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "List of Attributes retrieved"),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key export.")
+            })
+    @GetMapping(path = "/{keyUuid}/export/attributes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BaseAttribute> listExportKeyAttributes(@Parameter(description = "Token instance UUID") @PathVariable String uuid,
+                                                @Parameter(description = "Key UUID") @PathVariable String keyUuid) throws NotFoundException;
+
+    @Operation(
+            summary = "Validate list of Attributes to export a Cryptographic Key",
+            description = "This endpoint is optional. Connectors that do not support key export must return HTTP 501."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "204", description = "Attributes validated"),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Unprocessable Entity",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
+                            )),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key export.")
+            })
+    @PostMapping(path = "/{keyUuid}/export/attributes/validate", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    void validateExportKeyAttributes(@Parameter(description = "Token instance UUID") @PathVariable String uuid,
+                                     @Parameter(description = "Key UUID") @PathVariable String keyUuid,
+                                     @RequestBody List<RequestAttribute> attributes) throws NotFoundException, ValidationException;
+
+    @Operation(
+            summary = "Export the private key of a Cryptographic Key Pair as raw key material",
+            description = "This endpoint is optional. Connectors that do not support key export must return HTTP 501. " +
+                    "Only the private key is returned (PrivateKeyInfo); the platform already holds the public key via " +
+                    "the certificate and assembles the final PKCS#12 bundle itself."
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Private key exported"),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Unprocessable Entity",
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                                    examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}
+                            )),
+                    @ApiResponse(responseCode = "501", description = "Not implemented — this connector does not support key export.")
+            })
+    @PostMapping(path = "/{keyUuid}/export", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    ExportKeyResponseDto exportKey(@Parameter(description = "Token instance UUID") @PathVariable String uuid,
+                                   @Parameter(description = "Key UUID") @PathVariable String keyUuid,
+                                   @RequestBody ExportKeyRequestDto request) throws NotFoundException, ValidationException;
 
 }

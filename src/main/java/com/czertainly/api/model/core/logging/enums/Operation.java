@@ -59,6 +59,7 @@ public enum Operation implements IPlatformEnum {
     SCEP_CERTIFICATE_POLL("scepCertificatePoll", "SCEP Certificate Poll"),
     SCEP_TRANSACTION_CHECK("scepTransactionCheck", "SCEP Transaction check"),
     CMP_CONFIRM("cmpConfirm", "CMP confirm"),
+    IMPORT("import", "Import"),
     UPLOAD("upload", "Upload"),
     SYNC("sync", "Sync"),
     COMPROMISE("compromise", "Compromise"),

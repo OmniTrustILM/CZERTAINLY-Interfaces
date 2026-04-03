@@ -209,6 +209,89 @@ public interface CertificateController extends AuthProtectedController {
     )
     CertificateChainDownloadResponseDto downloadCertificateChain(@Parameter(description = "Certificate UUID") @PathVariable UUID uuid, @Parameter(description = "Certificate format") @PathVariable CertificateFormat certificateFormat, @RequestParam(required = false) boolean withEndCertificate, @RequestParam CertificateFormatEncoding encoding) throws NotFoundException, CertificateException;
 
+    @Operation(
+            summary = "List of Attributes to export a Certificate as PKCS#12 bundle",
+            description = "Returns the connector-specific attributes required when exporting a certificate as a " +
+                    "PKCS#12 bundle. The returned attributes should be collected from the user and supplied as " +
+                    "exportAttributes in the export request. Only available when the certificate has an associated " +
+                    "private key that is marked as exportable."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of Attributes retrieved"),
+            @ApiResponse(responseCode = "404", description = "Certificate not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity — including when the associated " +
+                    "private key is not marked as exportable",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                            examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),
+            @ApiResponse(responseCode = "501", description = "The connector managing the private key does not support key export")
+    })
+    @GetMapping(path = "/{uuid}/export/pkcs12/attributes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BaseAttribute> listExportPkcs12BundleAttributes(
+            @Parameter(description = "Certificate UUID") @PathVariable UUID uuid
+    ) throws ConnectorException, NotFoundException;
+
+    @Operation(
+            summary = "Export Certificate with public and private keys as PKCS#12 bundle",
+            description = "Exports the certificate together with its public and private keys as a PKCS#12 bundle. " +
+                    "Only available when the certificate has an associated private key that is marked as exportable. " +
+                    "Requires the target connector to support key export (KEY_EXPORT feature flag)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PKCS#12 bundle exported"),
+            @ApiResponse(responseCode = "404", description = "Certificate not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity — including when the associated " +
+                    "private key is not marked as exportable",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                            examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),
+            @ApiResponse(responseCode = "501", description = "The connector managing the private key does not support key export")
+    })
+    @PostMapping(path = "/{uuid}/export/pkcs12", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/x-pkcs12")
+    ResponseEntity<byte[]> exportPkcs12Bundle(@Parameter(description = "Certificate UUID") @PathVariable UUID uuid,
+                                              @RequestBody ExportPkcs12BundleRequestDto request
+    ) throws ConnectorException, NotFoundException, ValidationException;
+
+    @Operation(
+            summary = "List of Attributes to import a Certificate from a PKCS#12 bundle",
+            description = "Returns the connector-specific attributes required when importing a certificate and key pair " +
+                    "from a PKCS#12 bundle. The returned attributes should be collected from the user and supplied as " +
+                    "importAttributes in the import request. Requires the target connector to support key import (KEY_IMPORT feature flag)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of Attributes retrieved"),
+            @ApiResponse(responseCode = "404", description = "Token instance or Token profile not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))),
+            @ApiResponse(responseCode = "501", description = "The connector does not support key pair import")
+    })
+    @GetMapping(path = "/import/pkcs12/attributes", produces = {MediaType.APPLICATION_JSON_VALUE})
+    List<BaseAttribute> listImportPkcs12BundleAttributes(
+            @Parameter(description = "Token Instance UUID") @RequestParam UUID tokenInstanceUuid,
+            @Parameter(description = "Token Profile UUID") @RequestParam UUID tokenProfileUuid
+    ) throws ConnectorException, NotFoundException;
+
+    @Operation(
+            summary = "Import a certificate and key pair from a PKCS#12 bundle",
+            description = "Parses the supplied PKCS#12 bundle, stores the certificate chain in the platform, and " +
+                    "delegates private key storage to the connector identified by the supplied token instance and " +
+                    "token profile. Returns the created certificate. Requires the target connector to support key import (KEY_IMPORT feature flag)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Certificate and key pair imported successfully",
+                    content = @Content(schema = @Schema(implementation = CertificateDetailDto.class))),
+            @ApiResponse(responseCode = "404", description = "Token instance or Token profile not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))),
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)),
+                            examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),
+            @ApiResponse(responseCode = "501", description = "The connector does not support key import")
+    })
+    @PostMapping(path = "/import/pkcs12", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    CertificateDetailDto importPkcs12Bundle(
+            @RequestBody ImportPkcs12BundleRequestDto request
+    ) throws AlreadyExistException, AttributeException, ConnectorException, NotFoundException, ValidationException;
+
     @Operation(summary = "List Certificates Approvals")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of all approvals for the certificate")})
     @GetMapping(path = "/{uuid}/approvals", produces = {MediaType.APPLICATION_JSON_VALUE})

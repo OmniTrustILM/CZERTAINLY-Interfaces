@@ -7,7 +7,6 @@ import com.czertainly.api.model.common.enums.cryptography.KeyAlgorithm;
 import com.czertainly.api.model.common.enums.cryptography.KeyFormat;
 import com.czertainly.api.model.common.enums.cryptography.KeyType;
 import com.czertainly.api.model.core.compliance.ComplianceStatus;
-import com.czertainly.api.model.core.compliance.v2.ComplianceCheckResultDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -92,4 +91,7 @@ public class KeyItemDetailDto extends NameAndUuidDto {
     )
     private ComplianceStatus complianceStatus;
 
+    @Schema(description = "Indicates whether the private key material may be exported from the token.",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private boolean exportable;
 }

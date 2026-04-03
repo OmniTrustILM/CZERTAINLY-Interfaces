@@ -135,4 +135,8 @@ public class KeyItemDto extends NameAndUuidDto {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     private ComplianceStatus complianceStatus;
+
+    @Schema(description = "Indicates whether the private key material may be exported from the token.",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private boolean exportable;
 }
