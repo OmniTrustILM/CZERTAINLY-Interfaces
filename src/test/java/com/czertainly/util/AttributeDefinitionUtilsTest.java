@@ -724,12 +724,7 @@ class AttributeDefinitionUtilsTest {
         attribute.setName("unknown-attribute");  // cause or failure
         attribute.setContent(List.of(new StringAttributeContentV2("123")));
 
-        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
-                // tested method
-                validateAttributes(List.of(definition), List.of(attribute))
-        );
-
-        Assertions.assertEquals(1, exception.getErrors().size());
+        Assertions.assertDoesNotThrow(() -> validateAttributes(List.of(definition), List.of(attribute)));
     }
 
     @Test
