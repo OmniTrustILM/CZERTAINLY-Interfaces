@@ -224,9 +224,7 @@ public interface SigningProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "200", description = "ILM Signing Protocol activated", content = @Content(schema = @Schema(implementation = IlmSigningProtocolActivationDetailDto.class))),
             @ApiResponse(responseCode = "404", description = "Signing Profile or ILM Signing Protocol Configuration not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
     })
-    @PatchMapping(
-            path = "/{signingProfileUuid}/protocols/ilm/activate/{ilmSigningProtocolConfigurationUuid}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE}
+    @PatchMapping(path = "/{signingProfileUuid}/protocols/ilm/activate/{ilmSigningProtocolConfigurationUuid}", produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     IlmSigningProtocolActivationDetailDto activateIlmSigningProtocol(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
                                                                      @Parameter(description = "ILM Signing Protocol Configuration UUID") @PathVariable UUID ilmSigningProtocolConfigurationUuid) throws NotFoundException;
@@ -252,9 +250,7 @@ public interface SigningProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "200", description = "TSP activated", content = @Content(schema = @Schema(implementation = TspActivationDetailDto.class))),
             @ApiResponse(responseCode = "404", description = "Signing Profile or TSP Configuration not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
     })
-    @PatchMapping(
-            path = "/{signingProfileUuid}/protocols/tsp/activate/{tspConfigurationUuid}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE}
+    @PatchMapping(path = "/{signingProfileUuid}/protocols/tsp/activate/{tspConfigurationUuid}", produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     TspActivationDetailDto activateTsp(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
                                        @Parameter(description = "TSP Configuration UUID") @PathVariable UUID tspConfigurationUuid) throws NotFoundException;
