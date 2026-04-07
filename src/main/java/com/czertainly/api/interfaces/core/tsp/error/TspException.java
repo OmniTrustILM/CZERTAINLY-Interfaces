@@ -13,15 +13,18 @@ import lombok.Getter;
 public class TspException extends Exception {
 
     private final TspFailureInfo failureInfo;
+    private final String clientMessage;
 
-    public TspException(TspFailureInfo failureInfo, String message) {
+    public TspException(TspFailureInfo failureInfo, String message, String clientMessage) {
         super(message);
         this.failureInfo = failureInfo;
+        this.clientMessage = clientMessage;
     }
 
-    public TspException(TspFailureInfo failureInfo, String message, Throwable cause) {
+    public TspException(TspFailureInfo failureInfo, String message, Throwable cause, String clientMessage) {
         super(message, cause);
         this.failureInfo = failureInfo;
+        this.clientMessage = clientMessage;
     }
 
 }
