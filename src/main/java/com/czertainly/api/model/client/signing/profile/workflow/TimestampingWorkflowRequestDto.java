@@ -87,6 +87,11 @@ public class TimestampingWorkflowRequestDto extends WorkflowRequestDto {
             example = "[\"SHA-256\", \"SHA-384\"]")
     private List<DigestAlgorithm> allowedDigestAlgorithms = new ArrayList<>();
 
+    @Schema(
+            description = "Whether to validate the timestamp token after it was issued.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Boolean validateTokenSignature;
+
     public TimestampingWorkflowRequestDto() {
         super(SigningWorkflowType.TIMESTAMPING);
     }

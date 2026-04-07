@@ -17,6 +17,9 @@ import java.util.List;
 @ToString(callSuper = true)
 public class TimeQualityConfigurationDto extends NameAndUuidDto {
 
+    @Schema(description = "Declared accuracy of the profile, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.REQUIRED, example = "PT1S", defaultValue = "PT1S")
+    private Duration accuracy = Duration.ofSeconds(1);
+
     @Schema(description = "List of NTP server addresses", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"pool.ntp.org\", \"time.google.com\"]")
     private List<String> ntpServers;
 
