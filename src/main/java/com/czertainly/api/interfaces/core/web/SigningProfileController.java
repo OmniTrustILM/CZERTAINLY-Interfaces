@@ -7,6 +7,7 @@ import com.czertainly.api.model.client.approvalprofile.ApprovalProfileDto;
 import com.czertainly.api.model.client.certificate.SearchRequestDto;
 import com.czertainly.api.model.client.signing.profile.SigningProfileRequestDto;
 import com.czertainly.api.model.client.signing.profile.workflow.SigningWorkflowType;
+import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.core.certificate.CertificateDto;
 import com.czertainly.api.model.core.signing.SigningProtocol;
 import com.czertainly.api.model.common.BulkActionMessageDto;
@@ -168,6 +169,21 @@ public interface SigningProfileController extends AuthProtectedController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "List of certificates retrieved")})
     @GetMapping(path = "/signingCertificates", produces = MediaType.APPLICATION_JSON_VALUE)
     List<CertificateDto> listSigningCertificates(@Parameter(description = "Signing Workflow Type") @RequestParam SigningWorkflowType signingWorkflowType);
+
+    @Operation(
+            operationId = "listSignatureAttributesForCertificate",
+            summary = "Get signing operation attribute descriptors for a certificate",
+            description = "Returns the signing operation attribute descriptors (e.g. signature scheme, digest algorithm) " +
+                    "derived from the key algorithm of the given certificate. " +
+                    "Intended for use during Signing Profile creation to populate the signingOperationAttributes field."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Signature attribute descriptors retrieved"),
+            @ApiResponse(responseCode = "404", description = "Certificate not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+    })
+    @GetMapping(path = "/certificates/{certificateUuid}/signatureAttributes", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<BaseAttribute> listSignatureAttributesForCertificate(
+            @Parameter(description = "Certificate UUID") @PathVariable UUID certificateUuid) throws NotFoundException;
 
     // -----------------------------------------------------------------------------------------------------------------
     // Digital Signatures
