@@ -105,7 +105,7 @@ public enum Resource implements IPlatformEnum {
     ILM_SIGNING_PROTOCOL_CONFIGURATION(Codes.ILM_SIGNING_PROTOCOL_CONFIGURATION, "ILM Signing Protocol Configuration", true, true),
     SIGNING_PROFILE(Codes.SIGNING_PROFILE, "Signing Profile", true, true),
     TIME_QUALITY_CONFIGURATION(Codes.TIME_QUALITY_CONFIGURATION, "Time Quality Configuration", true, true),
-    TSP_CONFIGURATION(Codes.TSP_CONFIGURATION, "Timestamping Protocol Configuration", true, true),
+    TSP_PROFILE(Codes.TSP_PROFILE, "Timestamping Protocol Profile", true, true),
     ;
 
     private static final Resource[] VALUES;
@@ -244,7 +244,7 @@ public enum Resource implements IPlatformEnum {
         public static final String ILM_SIGNING_PROTOCOL_CONFIGURATION = "ilmSigningProtocolConfigurations";
         public static final String SIGNING_PROFILE = "signingProfiles";
         public static final String TIME_QUALITY_CONFIGURATION = "timeQualityConfigurations";
-        public static final String TSP_CONFIGURATION = "tspConfigurations";
+        public static final String TSP_PROFILE = "tspProfiles";
 
         private Codes() {
 

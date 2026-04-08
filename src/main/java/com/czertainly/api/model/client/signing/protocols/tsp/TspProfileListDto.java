@@ -9,16 +9,16 @@ import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TspConfigurationListDto", description = "TSP (Timestamping Protocol) configuration details for listing")
+@Schema(name = "TspProfileListDto", description = "TSP (Timestamping Protocol) profile details for listing")
 @ToString(callSuper = true)
-public class TspConfigurationListDto extends NameAndUuidDto {
+public class TspProfileListDto extends NameAndUuidDto {
 
-    @Schema(description = "Description of the TSP Configuration", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP configuration for production timestamping")
+    @Schema(description = "Description of the TSP Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP profile for production timestamping")
     private String description;
 
     @Schema(description = "Default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
     private SimplifiedSigningProfileDto defaultSigningProfile;
 
-    @Schema(description = "Enabled flag of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
+    @Schema(description = "Enabled flag of the TSP Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     private boolean enabled;
 }

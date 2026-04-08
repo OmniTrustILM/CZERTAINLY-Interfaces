@@ -248,12 +248,12 @@ public interface SigningProfileController extends AuthProtectedController {
     @Operation(operationId = "activateTsp", summary = "Activate TSP for Signing Profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TSP activated", content = @Content(schema = @Schema(implementation = TspActivationDetailDto.class))),
-            @ApiResponse(responseCode = "404", description = "Signing Profile or TSP Configuration not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
+            @ApiResponse(responseCode = "404", description = "Signing Profile or TSP Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
     })
-    @PatchMapping(path = "/{signingProfileUuid}/protocols/tsp/activate/{tspConfigurationUuid}", produces = {MediaType.APPLICATION_JSON_VALUE}
+    @PatchMapping(path = "/{signingProfileUuid}/protocols/tsp/activate/{tspProfileUuid}", produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     TspActivationDetailDto activateTsp(@Parameter(description = "Signing Profile UUID") @PathVariable UUID signingProfileUuid,
-                                       @Parameter(description = "TSP Configuration UUID") @PathVariable UUID tspConfigurationUuid) throws NotFoundException;
+                                       @Parameter(description = "TSP Profile UUID") @PathVariable UUID tspProfileUuid) throws NotFoundException;
 
     @Operation(operationId = "deactivateTsp", summary = "Deactivate TSP for Signing Profile")
     @ApiResponses(value = {

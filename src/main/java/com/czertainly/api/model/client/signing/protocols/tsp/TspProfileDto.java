@@ -13,14 +13,14 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "TspConfigurationDto", description = "TSP (Timestamping Protocol) configuration details")
+@Schema(name = "TspProfileDto", description = "TSP (Timestamping Protocol) profile details")
 @ToString(callSuper = true)
-public class TspConfigurationDto extends NameAndUuidDto {
+public class TspProfileDto extends NameAndUuidDto {
 
-    @Schema(description = "Description of the TSP Configuration", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP configuration for production timestamping")
+    @Schema(description = "Description of the TSP Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP profile for production timestamping")
     private String description;
 
-    @Schema(description = "Enabled flag of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
+    @Schema(description = "Enabled flag of the TSP Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     private boolean enabled;
 
     @Schema(description = "Default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
@@ -29,7 +29,7 @@ public class TspConfigurationDto extends NameAndUuidDto {
     @Schema(
             description = "TSP URL for signing",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
-            example = "https://ilm.otilm.com/api/v1/protocols/tsp/tsp-configuration-1/sign"
+            example = "https://ilm.otilm.com/api/v1/protocols/tsp/tsp-profile-1/sign"
     )
     private String signingUrl;
 

@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Schema(name = "TspConfigurationRequestDto", description = "Request to create or update a TSP (Timestamping Protocol) Configuration")
-public class TspConfigurationRequestDto {
+@Schema(name = "TspProfileRequestDto", description = "Request to create or update a TSP (Timestamping Protocol) Profile")
+public class TspProfileRequestDto {
 
     @NotBlank
     @ValidName
-    @Schema(description = "Name of the TSP Configuration", requiredMode = Schema.RequiredMode.REQUIRED, example = "TSP-Config-1")
+    @Schema(description = "Name of the TSP Profile", requiredMode = Schema.RequiredMode.REQUIRED, example = "TSP-Profile-1")
     private String name;
 
-    @Schema(description = "Description of the TSP Configuration", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP configuration for production timestamping")
+    @Schema(description = "Description of the TSP Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "TSP profile for production timestamping")
     private String description;
 
     @Schema(description = "UUID of the default Signing Profile", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "6b55de1c-844f-11ec-a8a3-0242ac120002")
