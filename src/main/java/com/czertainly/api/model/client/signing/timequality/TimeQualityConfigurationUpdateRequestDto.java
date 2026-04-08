@@ -1,8 +1,10 @@
 package com.czertainly.api.model.client.signing.timequality;
 
 import com.czertainly.api.model.client.attribute.RequestAttribute;
+import com.czertainly.api.model.client.signing.timequality.validation.NtpConfiguration;
 import com.czertainly.api.model.client.signing.timequality.validation.PositiveDuration;
 import com.czertainly.api.model.client.signing.timequality.validation.ValidHostnameList;
+import com.czertainly.api.model.client.signing.timequality.validation.ValidNtpMinReachable;
 import com.czertainly.api.model.common.validation.ValidName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ValidNtpMinReachable
 @Schema(name = "TimeQualityConfigurationUpdateRequestDto", description = "Request to update an existing Time Quality Configuration")
-public class TimeQualityConfigurationUpdateRequestDto {
+public class TimeQualityConfigurationUpdateRequestDto implements NtpConfiguration {
 
     @NotBlank
     @ValidName
