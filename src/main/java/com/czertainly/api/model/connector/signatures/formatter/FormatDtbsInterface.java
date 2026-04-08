@@ -20,13 +20,11 @@ import java.io.Serializable;
         discriminatorProperty = "type",
         discriminatorMapping = {
                 @DiscriminatorMapping(value = SigningWorkflowType.Codes.TIMESTAMPING, schema = TimestampingFormatDtbsRequestDto.class),
-                @DiscriminatorMapping(value = SigningWorkflowType.Codes.DOCUMENT_SIGNING, schema = DocumentSigningFormatDtbsRequestDto.class),
-                @DiscriminatorMapping(value = SigningWorkflowType.Codes.CODE_BINARY_SIGNING, schema = CodeBinarySigningFormatDtbsRequestDto.class),
+                @DiscriminatorMapping(value = SigningWorkflowType.Codes.CONTENT_SIGNING, schema = ContentSigningFormatDtbsRequestDto.class),
         },
         oneOf = {
                 TimestampingFormatDtbsRequestDto.class,
-                DocumentSigningFormatDtbsRequestDto.class,
-                CodeBinarySigningFormatDtbsRequestDto.class,
+                ContentSigningFormatDtbsRequestDto.class,
         })
 public interface FormatDtbsInterface extends Serializable {
 

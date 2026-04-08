@@ -16,8 +16,7 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes({
         @Type(value = TimestampingFormatDtbsRequestDto.class, name = SigningWorkflowType.Codes.TIMESTAMPING),
-        @Type(value = DocumentSigningFormatDtbsRequestDto.class, name = SigningWorkflowType.Codes.DOCUMENT_SIGNING),
-        @Type(value = CodeBinarySigningFormatDtbsRequestDto.class, name = SigningWorkflowType.Codes.CODE_BINARY_SIGNING),
+        @Type(value = ContentSigningFormatDtbsRequestDto.class, name = SigningWorkflowType.Codes.CONTENT_SIGNING),
 })
 @Schema(implementation = FormatDtbsInterface.class)
 public abstract class FormatDtbsRequestDto implements FormatDtbsInterface {

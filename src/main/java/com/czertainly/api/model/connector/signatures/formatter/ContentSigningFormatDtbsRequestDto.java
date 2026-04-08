@@ -7,18 +7,18 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * DTBS formatting request for the Document Signing workflow.
+ * DTBS formatting request for the Content Signing workflow.
  *
  * <p>No additional Core-provided fields beyond the base at this time.
- * Reserved for future document-signing-specific properties.</p>
+ * Reserved for future content-signing-specific properties.</p>
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Schema(title = "DocumentSigningFormatDtbsRequestDto", description = "DTBS formatting request for Document Signing")
-public class DocumentSigningFormatDtbsRequestDto extends FormatDtbsRequestDto {
+@Schema(title = "ContentSigningFormatDtbsRequestDto", description = "DTBS formatting request for Content Signing")
+public class ContentSigningFormatDtbsRequestDto extends FormatDtbsRequestDto {
 
-    public DocumentSigningFormatDtbsRequestDto() {
-        super(SigningWorkflowType.DOCUMENT_SIGNING);
+    public ContentSigningFormatDtbsRequestDto() {
+        super(SigningWorkflowType.CONTENT_SIGNING);
     }
 }

@@ -23,14 +23,12 @@ import java.io.Serializable;
         discriminatorProperty = "type",
         discriminatorMapping = {
                 @DiscriminatorMapping(value = SigningWorkflowType.Codes.TIMESTAMPING, schema = TimestampingWorkflowDto.class),
-                @DiscriminatorMapping(value = SigningWorkflowType.Codes.DOCUMENT_SIGNING, schema = DocumentSigningWorkflowDto.class),
-                @DiscriminatorMapping(value = SigningWorkflowType.Codes.CODE_BINARY_SIGNING, schema = CodeBinarySigningWorkflowDto.class),
+                @DiscriminatorMapping(value = SigningWorkflowType.Codes.CONTENT_SIGNING, schema = ContentSigningWorkflowDto.class),
                 @DiscriminatorMapping(value = SigningWorkflowType.Codes.RAW_SIGNING, schema = RawSigningWorkflowDto.class),
         },
         oneOf = {
                 TimestampingWorkflowDto.class,
-                DocumentSigningWorkflowDto.class,
-                CodeBinarySigningWorkflowDto.class,
+                ContentSigningWorkflowDto.class,
                 RawSigningWorkflowDto.class,
         })
 public interface WorkflowInterface extends Serializable {

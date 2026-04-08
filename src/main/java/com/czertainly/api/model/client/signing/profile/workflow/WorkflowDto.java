@@ -30,8 +30,7 @@ import lombok.Data;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TimestampingWorkflowDto.class, name = SigningWorkflowType.Codes.TIMESTAMPING),
-        @JsonSubTypes.Type(value = DocumentSigningWorkflowDto.class, name = SigningWorkflowType.Codes.DOCUMENT_SIGNING),
-        @JsonSubTypes.Type(value = CodeBinarySigningWorkflowDto.class, name = SigningWorkflowType.Codes.CODE_BINARY_SIGNING),
+        @JsonSubTypes.Type(value = ContentSigningWorkflowDto.class, name = SigningWorkflowType.Codes.CONTENT_SIGNING),
         @JsonSubTypes.Type(value = RawSigningWorkflowDto.class, name = SigningWorkflowType.Codes.RAW_SIGNING),
 })
 @Schema(implementation = WorkflowInterface.class)
