@@ -1,5 +1,6 @@
 package com.czertainly.api.interfaces.core.web;
 
+import com.czertainly.api.exception.AlreadyExistException;
 import com.czertainly.api.exception.AttributeException;
 import com.czertainly.api.exception.NotFoundException;
 import com.czertainly.api.interfaces.AuthProtectedController;
@@ -65,14 +66,15 @@ public interface TspProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    TspProfileDto createTspProfile(@RequestBody @Valid TspProfileRequestDto request) throws AttributeException, NotFoundException;
+    TspProfileDto createTspProfile(@RequestBody @Valid TspProfileRequestDto request) throws AlreadyExistException, AttributeException, NotFoundException;
 
     @Operation(operationId = "updateTspProfile", summary = "Update TSP Profile")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TSP Profile updated"),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    TspProfileDto updateTspProfile(@Parameter(description = "TSP Profile UUID") @PathVariable UUID uuid, @RequestBody @Valid TspProfileRequestDto request) throws NotFoundException, AttributeException;
+    TspProfileDto updateTspProfile(@Parameter(description = "TSP Profile UUID") @PathVariable UUID uuid, @RequestBody @Valid TspProfileRequestDto request)
+            throws AlreadyExistException, AttributeException, NotFoundException;
 
     @Operation(operationId = "deleteTspProfile", summary = "Delete TSP Profile")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "TSP Profile deleted")})
