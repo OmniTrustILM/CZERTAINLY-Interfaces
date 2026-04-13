@@ -20,8 +20,6 @@ import java.util.List;
  *     <li>Workflow validation and DTBS formatting properties: managed signing only — null for delegated</li>
  *     <li>Workflow validation properties: both managed and delegated signing</li>
  * </ul>
- *
- * <p><b>.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
