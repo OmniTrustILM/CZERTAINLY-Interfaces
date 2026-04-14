@@ -35,25 +35,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
         name = "TSP — by profile name",
         description = "RFC 3161 Timestamp Protocol endpoint. Routed by TSP Profile name. " +
                 "All responses — including errors — " +
-                "are returned as application/timestamp-response per RFC 3161 section 3."
+                "are returned as application/timestamp-reply per RFC 3161 section 3."
 )
 @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
                 description = "TimeStampResp returned (check PKIStatus inside the response for success or rejection)",
-                content = @Content(mediaType = "application/timestamp-response",
+                content = @Content(mediaType = "application/timestamp-reply",
                         schema = @Schema(type = "string", format = "binary"))
         ),
         @ApiResponse(
                 responseCode = "400",
                 description = "Request could not be processed; rejection returned as TimeStampResp",
-                content = @Content(mediaType = "application/timestamp-response",
+                content = @Content(mediaType = "application/timestamp-reply",
                         schema = @Schema(type = "string", format = "binary"))
         ),
         @ApiResponse(
                 responseCode = "500",
                 description = "Internal error; rejection returned as TimeStampResp with systemFailure",
-                content = @Content(mediaType = "application/timestamp-response",
+                content = @Content(mediaType = "application/timestamp-reply",
                         schema = @Schema(type = "string", format = "binary"))
         )
 })
@@ -72,14 +72,14 @@ public interface TspController extends NoAuthController {
             @ApiResponse(
                     responseCode = "200",
                     description = "TimeStampResp returned",
-                    content = @Content(mediaType = "application/timestamp-response",
+                    content = @Content(mediaType = "application/timestamp-reply",
                             schema = @Schema(type = "string", format = "binary"))
             )
     })
     @PostMapping(
             value = "/sign",
             consumes = "application/timestamp-query",
-            produces = "application/timestamp-response"
+            produces = "application/timestamp-reply"
     )
     ResponseEntity<byte[]> timestamp(
             @Parameter(description = "TSP Profile name")
