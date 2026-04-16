@@ -68,7 +68,7 @@ jobs:
           repositories: |
             CZERTAINLY-Interface-Documentation
       - name: Trigger build OpenAPI
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ steps.interfaces-docs-app-token.outputs.token }}
           script: |
