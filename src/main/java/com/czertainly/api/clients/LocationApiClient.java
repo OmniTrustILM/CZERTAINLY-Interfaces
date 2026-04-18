@@ -4,7 +4,6 @@ import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.connector.entity.*;
-import com.czertainly.api.model.core.connector.ConnectorApiClientDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,7 +31,7 @@ public class LocationApiClient extends BaseApiClient {
         this.defaultTrustManagers = defaultTrustManagers;
     }
 
-    public LocationDetailResponseDto getLocationDetail(ConnectorApiClientDto connector, String entityUuid, LocationDetailRequestDto requestDto) throws ConnectorException {
+    public LocationDetailResponseDto getLocationDetail(ApiClientConnectorInfo connector, String entityUuid, LocationDetailRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -45,7 +44,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public PushCertificateResponseDto pushCertificateToLocation(ConnectorApiClientDto connector, String entityUuid, PushCertificateRequestDto requestDto) throws ConnectorException {
+    public PushCertificateResponseDto pushCertificateToLocation(ApiClientConnectorInfo connector, String entityUuid, PushCertificateRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -58,7 +57,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public List<BaseAttribute> listPushCertificateAttributes(ConnectorApiClientDto connector, String entityUuid) throws ConnectorException {
+    public List<BaseAttribute> listPushCertificateAttributes(ApiClientConnectorInfo connector, String entityUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -70,7 +69,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public void validatePushCertificateAttributes(ConnectorApiClientDto connector, String entityUuid, List<RequestAttribute>pushAttributes) throws ConnectorException {
+    public void validatePushCertificateAttributes(ApiClientConnectorInfo connector, String entityUuid, List<RequestAttribute>pushAttributes) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         processRequest(r -> r
@@ -83,7 +82,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public RemoveCertificateResponseDto removeCertificateFromLocation(ConnectorApiClientDto connector, String entityUuid, RemoveCertificateRequestDto requestDto) throws ConnectorException {
+    public RemoveCertificateResponseDto removeCertificateFromLocation(ApiClientConnectorInfo connector, String entityUuid, RemoveCertificateRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -96,7 +95,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public GenerateCsrResponseDto generateCsrLocation(ConnectorApiClientDto connector, String entityUuid, GenerateCsrRequestDto requestDto) throws ConnectorException {
+    public GenerateCsrResponseDto generateCsrLocation(ApiClientConnectorInfo connector, String entityUuid, GenerateCsrRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -109,7 +108,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public List<BaseAttribute> listGenerateCsrAttributes(ConnectorApiClientDto connector, String entityUuid) throws ConnectorException {
+    public List<BaseAttribute> listGenerateCsrAttributes(ApiClientConnectorInfo connector, String entityUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -121,7 +120,7 @@ public class LocationApiClient extends BaseApiClient {
                 connector);
     }
 
-    public void validateGenerateCsrAttributes(ConnectorApiClientDto connector, String entityUuid, List<RequestAttribute>pushAttributes) throws ConnectorException {
+    public void validateGenerateCsrAttributes(ApiClientConnectorInfo connector, String entityUuid, List<RequestAttribute>pushAttributes) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         processRequest(r -> r

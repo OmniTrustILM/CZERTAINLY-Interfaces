@@ -4,14 +4,12 @@ import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.exception.ValidationException;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
-import com.czertainly.api.model.common.attribute.v2.BaseAttributeV2;
 import com.czertainly.api.model.connector.authority.AuthorityProviderInstanceDto;
 import com.czertainly.api.model.connector.authority.AuthorityProviderInstanceRequestDto;
 import com.czertainly.api.model.connector.authority.CertificateRevocationListRequestDto;
 import com.czertainly.api.model.connector.authority.CertificateRevocationListResponseDto;
 import com.czertainly.api.model.connector.authority.CaCertificatesRequestDto;
 import com.czertainly.api.model.connector.authority.CaCertificatesResponseDto;
-import com.czertainly.api.model.core.connector.ConnectorApiClientDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,7 +36,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
         this.defaultTrustManagers = defaultTrustManagers;
     }
 
-    public List<AuthorityProviderInstanceDto> listAuthorityInstances(ConnectorApiClientDto connector) throws ConnectorException {
+    public List<AuthorityProviderInstanceDto> listAuthorityInstances(ApiClientConnectorInfo connector) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -50,7 +48,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public AuthorityProviderInstanceDto getAuthorityInstance(ConnectorApiClientDto connector, String uuid) throws ConnectorException {
+    public AuthorityProviderInstanceDto getAuthorityInstance(ApiClientConnectorInfo connector, String uuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -62,7 +60,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public AuthorityProviderInstanceDto createAuthorityInstance(ConnectorApiClientDto connector, AuthorityProviderInstanceRequestDto requestDto) throws ConnectorException {
+    public AuthorityProviderInstanceDto createAuthorityInstance(ApiClientConnectorInfo connector, AuthorityProviderInstanceRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -76,7 +74,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
     }
 
 
-    public AuthorityProviderInstanceDto updateAuthorityInstance(ConnectorApiClientDto connector, String uuid, AuthorityProviderInstanceRequestDto requestDto) throws ConnectorException {
+    public AuthorityProviderInstanceDto updateAuthorityInstance(ApiClientConnectorInfo connector, String uuid, AuthorityProviderInstanceRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -89,7 +87,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public void removeAuthorityInstance(ConnectorApiClientDto connector, String uuid) throws ConnectorException {
+    public void removeAuthorityInstance(ApiClientConnectorInfo connector, String uuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.DELETE, connector, true);
 
         processRequest(r -> r
@@ -102,7 +100,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
     }
 
 
-    public List<BaseAttribute> listRAProfileAttributes(ConnectorApiClientDto connector, String uuid) throws ConnectorException {
+    public List<BaseAttribute> listRAProfileAttributes(ApiClientConnectorInfo connector, String uuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -114,7 +112,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public Boolean validateRAProfileAttributes(ConnectorApiClientDto connector, String uuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
+    public Boolean validateRAProfileAttributes(ApiClientConnectorInfo connector, String uuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -127,7 +125,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public CertificateRevocationListResponseDto getCrl(ConnectorApiClientDto connector, String uuid, CertificateRevocationListRequestDto requestDto) throws ConnectorException {
+    public CertificateRevocationListResponseDto getCrl(ApiClientConnectorInfo connector, String uuid, CertificateRevocationListRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> Objects.requireNonNull(r
@@ -140,7 +138,7 @@ public class AuthorityInstanceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public CaCertificatesResponseDto getCaCertificates(ConnectorApiClientDto connector, String uuid, CaCertificatesRequestDto requestDto) throws ValidationException, ConnectorException {
+    public CaCertificatesResponseDto getCaCertificates(ApiClientConnectorInfo connector, String uuid, CaCertificatesRequestDto requestDto) throws ValidationException, ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> Objects.requireNonNull(r
