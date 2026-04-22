@@ -1,12 +1,16 @@
 package com.czertainly.api.model.connector.signatures.formatter;
 
+import com.czertainly.api.model.client.signing.profile.workflow.validation.ValidOid;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 @Schema(title = "ExtensionDto", description = "ASN.1 extension (OID, criticality, value)")
 public class ExtensionDto {
 
+    @NotBlank
+    @ValidOid
     @Schema(
             description = "OID of the extension",
             requiredMode = Schema.RequiredMode.REQUIRED,

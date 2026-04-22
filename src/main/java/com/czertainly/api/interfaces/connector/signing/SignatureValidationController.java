@@ -1,12 +1,13 @@
 package com.czertainly.api.interfaces.connector.signing;
 
 import com.czertainly.api.exception.ValidationException;
-import com.czertainly.api.interfaces.AuthProtectedConnectorController;
+import com.czertainly.api.interfaces.connector.common.v2.AuthProtectedConnectorController;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.connector.signatures.validation.SignatureValidationRequestDto;
 import com.czertainly.api.model.connector.signatures.validation.SignatureValidationResultDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -29,7 +30,8 @@ import java.util.List;
 public interface SignatureValidationController extends AuthProtectedConnectorController {
 
     @Operation(
-            summary = "List Validation Attributes"
+            summary = "List Validation Attributes",
+            operationId = "listSignatureValidationAttributes"
     )
     @ApiResponses(
             value = {
@@ -46,7 +48,8 @@ public interface SignatureValidationController extends AuthProtectedConnectorCon
     List<BaseAttribute> listValidationAttributes();
 
     @Operation(
-            summary = "Validate Validation Attributes"
+            summary = "Validate Validation Attributes",
+            operationId = "validateSignatureValidationAttributes"
     )
     @ApiResponses(
             value = {
@@ -69,10 +72,11 @@ public interface SignatureValidationController extends AuthProtectedConnectorCon
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void validateValidationAttributes(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void validateValidationAttributes(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
     @Operation(
             summary = "Validate signature",
+            operationId = "validateSignature",
             description = "Performs full signature validation (structural and cryptographic)."
     )
     @ApiResponses(
@@ -95,5 +99,5 @@ public interface SignatureValidationController extends AuthProtectedConnectorCon
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    SignatureValidationResultDto validate(@RequestBody SignatureValidationRequestDto request);
+    SignatureValidationResultDto validate(@Valid @RequestBody SignatureValidationRequestDto request);
 }

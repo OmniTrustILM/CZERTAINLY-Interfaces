@@ -20,8 +20,8 @@ import java.util.List;
 
 @Data
 @ValidNtpMinReachable
-@Schema(name = "TimeQualityConfigurationUpdateRequestDto", description = "Request to update an existing Time Quality Configuration")
-public class TimeQualityConfigurationUpdateRequestDto implements NtpConfiguration {
+@Schema(name = "TimeQualityConfigurationRequestDto", description = "Request to create or update a Time Quality Configuration")
+public class TimeQualityConfigurationRequestDto implements NtpConfiguration {
 
     @NotBlank
     @ValidName

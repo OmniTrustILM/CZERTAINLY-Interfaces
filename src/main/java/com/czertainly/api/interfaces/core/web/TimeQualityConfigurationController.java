@@ -9,10 +9,9 @@ import com.czertainly.api.model.common.ErrorMessageDto;
 import com.czertainly.api.model.common.PaginationResponseDto;
 import com.czertainly.api.model.core.search.SearchFieldDataByGroupDto;
 import com.czertainly.api.model.client.signing.profile.SimplifiedSigningProfileDto;
-import com.czertainly.api.model.client.signing.timequality.TimeQualityConfigurationCreateRequestDto;
 import com.czertainly.api.model.client.signing.timequality.TimeQualityConfigurationDto;
 import com.czertainly.api.model.client.signing.timequality.TimeQualityConfigurationListDto;
-import com.czertainly.api.model.client.signing.timequality.TimeQualityConfigurationUpdateRequestDto;
+import com.czertainly.api.model.client.signing.timequality.TimeQualityConfigurationRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -66,14 +65,14 @@ public interface TimeQualityConfigurationController extends AuthProtectedControl
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    TimeQualityConfigurationDto createTimeQualityConfiguration(@RequestBody @Valid TimeQualityConfigurationCreateRequestDto request) throws AttributeException, NotFoundException;
+    TimeQualityConfigurationDto createTimeQualityConfiguration(@RequestBody @Valid TimeQualityConfigurationRequestDto request) throws AttributeException, NotFoundException;
 
     @Operation(operationId = "updateTimeQualityConfiguration", summary = "Update Time Quality Configuration")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Time Quality Configuration updated"),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    TimeQualityConfigurationDto updateTimeQualityConfiguration(@Parameter(description = "Time Quality Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid TimeQualityConfigurationUpdateRequestDto request) throws NotFoundException, AttributeException;
+    TimeQualityConfigurationDto updateTimeQualityConfiguration(@Parameter(description = "Time Quality Configuration UUID") @PathVariable UUID uuid, @RequestBody @Valid TimeQualityConfigurationRequestDto request) throws NotFoundException, AttributeException;
 
     @Operation(operationId = "deleteTimeQualityConfiguration", summary = "Delete Time Quality Configuration")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Time Quality Configuration deleted")})

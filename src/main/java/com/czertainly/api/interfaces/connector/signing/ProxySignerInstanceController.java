@@ -5,6 +5,7 @@ import com.czertainly.api.interfaces.connector.common.v2.AuthProtectedConnectorC
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -68,7 +69,7 @@ public interface ProxySignerInstanceController extends AuthProtectedConnectorCon
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void validateSignerAttributes(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void validateSignerAttributes(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
     @Operation(
             summary = "Check Signer Connection",
@@ -97,6 +98,6 @@ public interface ProxySignerInstanceController extends AuthProtectedConnectorCon
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void checkSignerConnection(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void checkSignerConnection(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
 }

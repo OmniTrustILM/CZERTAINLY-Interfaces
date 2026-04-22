@@ -2,15 +2,15 @@ package com.czertainly.api.model.connector.signatures.signer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProxySignResponseDto {
 

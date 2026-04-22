@@ -9,6 +9,7 @@ import com.czertainly.api.model.connector.signatures.signer.ProxySignatureValida
 import com.czertainly.api.model.connector.signatures.signer.ProxySignRequestDto;
 import com.czertainly.api.model.connector.signatures.signer.ProxySignatureValidateRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -44,7 +45,6 @@ public interface ProxySigningController extends AuthProtectedConnectorController
     )
     @GetMapping(
             path = "/sign/attributes",
-            consumes = {"application/json"},
             produces = {"application/json"}
     )
     List<BaseAttribute> listSignAttributes();
@@ -74,7 +74,7 @@ public interface ProxySigningController extends AuthProtectedConnectorController
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void validateSignAttributes(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void validateSignAttributes(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
     @Operation(
             summary = "Sign",
@@ -101,7 +101,7 @@ public interface ProxySigningController extends AuthProtectedConnectorController
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    ProxySignResponseDto sign(@RequestBody ProxySignRequestDto request);
+    ProxySignResponseDto sign(@Valid @RequestBody ProxySignRequestDto request);
 
     @Operation(
             summary = "List Validate Attributes",
@@ -122,7 +122,7 @@ public interface ProxySigningController extends AuthProtectedConnectorController
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    List<BaseAttribute> listValidationAttributes(@RequestBody List<RequestAttribute> connectionAttributes);
+    List<BaseAttribute> listValidationAttributes(@Valid @RequestBody List<RequestAttribute> connectionAttributes);
 
     @Operation(
             summary = "Validate Validation Attributes",
@@ -149,7 +149,7 @@ public interface ProxySigningController extends AuthProtectedConnectorController
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void validateValidationAttributes(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void validateValidationAttributes(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
     @Operation(
             summary = "Validate",
@@ -176,6 +176,6 @@ public interface ProxySigningController extends AuthProtectedConnectorController
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    ProxySignatureValidateResponseDto validate(@RequestBody ProxySignatureValidateRequestDto request);
+    ProxySignatureValidateResponseDto validate(@Valid @RequestBody ProxySignatureValidateRequestDto request);
 
 }

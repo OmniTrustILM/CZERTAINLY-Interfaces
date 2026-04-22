@@ -61,7 +61,7 @@ public enum SignatureAlgorithm implements IPlatformEnum {
             new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha384), false
     ),
     SHA512withECDSA(
-            "SHA512withECDSA", "ECDSA using SHA521", "ECDSA signature with SHA-512 digest",
+            "SHA512withECDSA", "ECDSA using SHA512", "ECDSA signature with SHA-512 digest",
             new AlgorithmIdentifier(X9ObjectIdentifiers.ecdsa_with_SHA512),
             new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha512), false
     ),

@@ -1,7 +1,7 @@
 package com.czertainly.api.interfaces.connector.signing;
 
 import com.czertainly.api.exception.ValidationException;
-import com.czertainly.api.interfaces.AuthProtectedConnectorController;
+import com.czertainly.api.interfaces.connector.common.v2.AuthProtectedConnectorController;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.connector.signatures.formatter.FormatDtbsRequestDto;
@@ -9,6 +9,7 @@ import com.czertainly.api.model.connector.signatures.formatter.FormatDtbsRespons
 import com.czertainly.api.model.connector.signatures.formatter.FormatResponseRequestDto;
 import com.czertainly.api.model.connector.signatures.formatter.FormattedResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -31,7 +32,8 @@ import java.util.List;
 public interface SignatureFormatterController extends AuthProtectedConnectorController {
 
     @Operation(
-            summary = "List Formatter Attributes"
+            summary = "List Formatter Attributes",
+            operationId = "listFormatterAttributes"
     )
     @ApiResponses(
             value = {
@@ -48,7 +50,8 @@ public interface SignatureFormatterController extends AuthProtectedConnectorCont
     List<BaseAttribute> listFormatterAttributes();
 
     @Operation(
-            summary = "Validate Formatter Attributes"
+            summary = "Validate Formatter Attributes",
+            operationId = "validateFormatterAttributes"
     )
     @ApiResponses(
             value = {
@@ -71,10 +74,11 @@ public interface SignatureFormatterController extends AuthProtectedConnectorCont
             produces = {"application/json"}
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void validateFormatterAttributes(@RequestBody List<RequestAttribute> attributes) throws ValidationException;
+    void validateFormatterAttributes(@Valid @RequestBody List<RequestAttribute> attributes) throws ValidationException;
 
     @Operation(
-            summary = "Compute data-to-be-signed bytes"
+            summary = "Compute data-to-be-signed bytes",
+            operationId = "formatDtbs"
     )
     @ApiResponses(
             value = {
@@ -96,10 +100,11 @@ public interface SignatureFormatterController extends AuthProtectedConnectorCont
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    FormatDtbsResponseDto formatDtbs(@RequestBody FormatDtbsRequestDto request);
+    FormatDtbsResponseDto formatDtbs(@Valid @RequestBody FormatDtbsRequestDto request);
 
     @Operation(
-            summary = "Assemble final formatted output"
+            summary = "Assemble final formatted output",
+            operationId = "formatSigningResponse"
     )
     @ApiResponses(
             value = {
@@ -121,6 +126,6 @@ public interface SignatureFormatterController extends AuthProtectedConnectorCont
             consumes = {"application/json"},
             produces = {"application/json"}
     )
-    FormattedResponseDto formatSigningResponse(@RequestBody FormatResponseRequestDto request);
+    FormattedResponseDto formatSigningResponse(@Valid @RequestBody FormatResponseRequestDto request);
 
 }

@@ -10,7 +10,6 @@ import com.czertainly.api.model.client.certificate.SearchRequestDto;
 import com.czertainly.api.model.client.signing.profile.SigningProfileRequestDto;
 import com.czertainly.api.model.client.signing.profile.workflow.SigningWorkflowType;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
-import com.czertainly.api.model.common.attribute.common.DataAttribute;
 import com.czertainly.api.model.core.certificate.CertificateDto;
 import com.czertainly.api.model.core.signing.SigningProtocol;
 import com.czertainly.api.model.common.BulkActionMessageDto;
@@ -90,7 +89,7 @@ public interface SigningProfileController extends AuthProtectedController {
 
     @Operation(operationId = "updateSigningProfile", summary = "Update Signing Profile", description = """
             Request to update an existing Signing Profile.
-            If there are existing Digital Signatures produced using this Signing Profile, creates a new version of Signing Profile.
+            If there are existing Signing Records produced using this Signing Profile, creates a new version of Signing Profile.
             Otherwise updates the latest version in-place.""")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Signing Profile updated"),
@@ -202,7 +201,7 @@ public interface SigningProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "404", description = "Connector or Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class)))
     })
     @GetMapping(path = "/signatureFormatterConnectors/{connectorUuid}/formatterAttributes", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<DataAttribute> listSignatureFormatterConnectorAttributes(
+    List<BaseAttribute> listSignatureFormatterConnectorAttributes(
             @Parameter(description = "Signature Formatter Connector UUID") @PathVariable UUID connectorUuid,
             @Parameter(description = "Signing Profile UUID — used for authorization purposes only", in = ParameterIn.QUERY) @RequestParam(required = false) UUID signingProfileUuid) throws NotFoundException, ConnectorException, AttributeException;
 
@@ -222,7 +221,6 @@ public interface SigningProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "404", description = "Signing Profile not found", content = @Content(schema = @Schema(implementation = ErrorMessageDto.class))),
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")}))
     })
-
     @PostMapping(path = "/{uuid}/signingRecords", produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
     PaginationResponseDto<SigningRecordListDto> listSigningRecordsForSigningProfile(
             @Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid,
