@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString(callSuper = true)
-public class ConnectorApiClientDto extends NameAndUuidDto implements ApiClientConnectorInfo {
+public class ConnectorApiClientDtoV1 extends NameAndUuidDto implements ApiClientConnectorInfo {
     @Schema(description = "URL of the Connector",
             examples = {"http://network-discovery-provider:8080"},
             requiredMode = Schema.RequiredMode.REQUIRED)
