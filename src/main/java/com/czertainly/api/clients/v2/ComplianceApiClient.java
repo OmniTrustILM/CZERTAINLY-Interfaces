@@ -1,10 +1,11 @@
 package com.czertainly.api.clients.v2;
 
+import com.czertainly.api.clients.ApiClientConnectorInfo;
 import com.czertainly.api.clients.BaseApiClient;
 import com.czertainly.api.exception.ConnectorException;
+import com.czertainly.api.interfaces.client.v2.ComplianceSyncApiClient;
 import com.czertainly.api.model.connector.compliance.v2.*;
 import com.czertainly.api.model.core.auth.Resource;
-import com.czertainly.api.model.core.connector.ConnectorDto;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -16,7 +17,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-public class ComplianceApiClient extends BaseApiClient {
+public class ComplianceApiClient extends BaseApiClient implements ComplianceSyncApiClient {
 
     private static final String COMPLIANCE_BASE_CONTEXT = "/v2/complianceProvider/{kind}";
     private static final String COMPLIANCE_RULES_GET_CONTEXT = COMPLIANCE_BASE_CONTEXT + "/rules";
@@ -35,7 +36,8 @@ public class ComplianceApiClient extends BaseApiClient {
         this.defaultTrustManagers = defaultTrustManagers;
     }
 
-    public List<ComplianceRuleResponseDto> getComplianceRules(ConnectorDto connector, String kind, Resource resource, String type, String format) throws ConnectorException {
+    @Override
+    public List<ComplianceRuleResponseDto> getComplianceRules(ApiClientConnectorInfo connector, String kind, Resource resource, String type, String format) throws ConnectorException {
         URI uri;
         UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(connector.getUrl());
         uriBuilder.path(COMPLIANCE_RULES_GET_CONTEXT.replace("{kind}", kind));
@@ -60,7 +62,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public ComplianceRuleResponseDto getComplianceRule(ConnectorDto connector, String kind, UUID ruleUuid) throws ConnectorException {
+    @Override
+    public ComplianceRuleResponseDto getComplianceRule(ApiClientConnectorInfo connector, String kind, UUID ruleUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -72,7 +75,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public ComplianceRulesBatchResponseDto getComplianceRulesBatch(ConnectorDto connector, String kind, ComplianceRulesBatchRequestDto requestDto) throws ConnectorException {
+    @Override
+    public ComplianceRulesBatchResponseDto getComplianceRulesBatch(ApiClientConnectorInfo connector, String kind, ComplianceRulesBatchRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -85,7 +89,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public List<ComplianceGroupResponseDto> getComplianceGroups(ConnectorDto connector, String kind, Resource resource) throws ConnectorException {
+    @Override
+    public List<ComplianceGroupResponseDto> getComplianceGroups(ApiClientConnectorInfo connector, String kind, Resource resource) throws ConnectorException {
         URI uri;
         UriBuilder uriBuilder = UriComponentsBuilder.fromUriString(connector.getUrl());
         uriBuilder.path(COMPLIANCE_GROUPS_GET_CONTEXT.replace("{kind}", kind));
@@ -103,7 +108,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public ComplianceGroupResponseDto getComplianceGroup(ConnectorDto connector, String kind, UUID groupUuid) throws ConnectorException {
+    @Override
+    public ComplianceGroupResponseDto getComplianceGroup(ApiClientConnectorInfo connector, String kind, UUID groupUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -115,7 +121,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public List<ComplianceRuleResponseDto> getComplianceGroupRules(ConnectorDto connector, String kind, UUID groupUuid) throws ConnectorException {
+    @Override
+    public List<ComplianceRuleResponseDto> getComplianceGroupRules(ApiClientConnectorInfo connector, String kind, UUID groupUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -127,7 +134,8 @@ public class ComplianceApiClient extends BaseApiClient {
                 connector);
     }
 
-    public ComplianceResponseDto checkCompliance(ConnectorDto connector, String kind, ComplianceRequestDto requestDto) throws ConnectorException {
+    @Override
+    public ComplianceResponseDto checkCompliance(ApiClientConnectorInfo connector, String kind, ComplianceRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r

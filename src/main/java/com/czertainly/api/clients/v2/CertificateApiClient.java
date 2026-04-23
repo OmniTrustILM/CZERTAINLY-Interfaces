@@ -1,12 +1,13 @@
 package com.czertainly.api.clients.v2;
 
+import com.czertainly.api.clients.ApiClientConnectorInfo;
 import com.czertainly.api.clients.BaseApiClient;
 import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.exception.ValidationException;
+import com.czertainly.api.interfaces.client.v2.CertificateSyncApiClient;
 import com.czertainly.api.model.client.attribute.RequestAttribute;
 import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.connector.v2.*;
-import com.czertainly.api.model.core.connector.ConnectorDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,7 +16,7 @@ import reactor.core.publisher.Mono;
 import javax.net.ssl.TrustManager;
 import java.util.List;
 
-public class CertificateApiClient extends BaseApiClient {
+public class CertificateApiClient extends BaseApiClient implements CertificateSyncApiClient {
 
     private static final String CERTIFICATE_BASE_CONTEXT = "/v2/authorityProvider/authorities/{uuid}/certificates";
 
@@ -39,7 +40,8 @@ public class CertificateApiClient extends BaseApiClient {
         this.defaultTrustManagers = defaultTrustManagers;
     }
 
-    public List<BaseAttribute> listIssueCertificateAttributes(ConnectorDto connector, String authorityUuid) throws ConnectorException {
+    @Override
+    public List<BaseAttribute> listIssueCertificateAttributes(ApiClientConnectorInfo connector, String authorityUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -51,7 +53,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public Boolean validateIssueCertificateAttributes(ConnectorDto connector, String authorityUuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
+    @Override
+    public Boolean validateIssueCertificateAttributes(ApiClientConnectorInfo connector, String authorityUuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -64,7 +67,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public CertificateDataResponseDto issueCertificate(ConnectorDto connector, String authorityUuid, CertificateSignRequestDto requestDto) throws ConnectorException {
+    @Override
+    public CertificateDataResponseDto issueCertificate(ApiClientConnectorInfo connector, String authorityUuid, CertificateSignRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -77,7 +81,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public CertificateDataResponseDto renewCertificate(ConnectorDto connector, String authorityUuid, CertificateRenewRequestDto requestDto) throws ConnectorException {
+    @Override
+    public CertificateDataResponseDto renewCertificate(ApiClientConnectorInfo connector, String authorityUuid, CertificateRenewRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -90,7 +95,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public List<BaseAttribute> listRevokeCertificateAttributes(ConnectorDto connector, String authorityUuid) throws ConnectorException {
+    @Override
+    public List<BaseAttribute> listRevokeCertificateAttributes(ApiClientConnectorInfo connector, String authorityUuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.GET, connector, true);
 
         return processRequest(r -> r
@@ -102,7 +108,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public Boolean validateRevokeCertificateAttributes(ConnectorDto connector, String authorityUuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
+    @Override
+    public Boolean validateRevokeCertificateAttributes(ApiClientConnectorInfo connector, String authorityUuid, List<RequestAttribute> attributes) throws ValidationException, ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -115,7 +122,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public void revokeCertificate(ConnectorDto connector, String authorityUuid, CertRevocationDto requestDto) throws ConnectorException {
+    @Override
+    public void revokeCertificate(ApiClientConnectorInfo connector, String authorityUuid, CertRevocationDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         processRequest(r -> r
@@ -128,7 +136,8 @@ public class CertificateApiClient extends BaseApiClient {
                 connector);
     }
 
-    public CertificateIdentificationResponseDto identifyCertificate(ConnectorDto connector, String authorityUuid, CertificateIdentificationRequestDto requestDto) throws ValidationException, ConnectorException {
+    @Override
+    public CertificateIdentificationResponseDto identifyCertificate(ApiClientConnectorInfo connector, String authorityUuid, CertificateIdentificationRequestDto requestDto) throws ValidationException, ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r

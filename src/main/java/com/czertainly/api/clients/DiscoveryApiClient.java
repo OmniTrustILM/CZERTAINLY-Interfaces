@@ -1,17 +1,17 @@
 package com.czertainly.api.clients;
 
 import com.czertainly.api.exception.ConnectorException;
+import com.czertainly.api.interfaces.client.v1.DiscoverySyncApiClient;
 import com.czertainly.api.model.connector.discovery.DiscoveryDataRequestDto;
 import com.czertainly.api.model.connector.discovery.DiscoveryProviderDto;
 import com.czertainly.api.model.connector.discovery.DiscoveryRequestDto;
-import com.czertainly.api.model.core.connector.ConnectorDto;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.net.ssl.TrustManager;
 
-public class DiscoveryApiClient extends BaseApiClient {
+public class DiscoveryApiClient extends BaseApiClient implements DiscoverySyncApiClient {
 
     private static final String DISCOVERY_BASE_CONTEXT = "/v1/discoveryProvider/discover";
     private static final String DISCOVERY_GET_CONTEXT = DISCOVERY_BASE_CONTEXT + "/{uuid}";
@@ -22,7 +22,8 @@ public class DiscoveryApiClient extends BaseApiClient {
     }
 
 
-    public DiscoveryProviderDto discoverCertificates(ConnectorDto connector, DiscoveryRequestDto requestDto) throws ConnectorException {
+    @Override
+    public DiscoveryProviderDto discoverCertificates(ApiClientConnectorInfo connector, DiscoveryRequestDto requestDto) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -35,7 +36,8 @@ public class DiscoveryApiClient extends BaseApiClient {
                 connector);
     }
 
-    public DiscoveryProviderDto getDiscoveryData(ConnectorDto connector, DiscoveryDataRequestDto requestDto, String uuid) throws ConnectorException {
+    @Override
+    public DiscoveryProviderDto getDiscoveryData(ApiClientConnectorInfo connector, DiscoveryDataRequestDto requestDto, String uuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.POST, connector, true);
 
         return processRequest(r -> r
@@ -48,7 +50,8 @@ public class DiscoveryApiClient extends BaseApiClient {
                 connector);
     }
 
-    public void removeDiscovery(ConnectorDto connector, String uuid) throws ConnectorException {
+    @Override
+    public void removeDiscovery(ApiClientConnectorInfo connector, String uuid) throws ConnectorException {
         WebClient.RequestBodyUriSpec request = prepareRequest(HttpMethod.DELETE, connector, true);
 
         processRequest(r -> r
