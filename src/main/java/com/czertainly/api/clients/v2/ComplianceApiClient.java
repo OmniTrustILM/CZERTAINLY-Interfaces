@@ -43,7 +43,7 @@ public class ComplianceApiClient extends BaseApiClient implements ComplianceSync
         uriBuilder.path(COMPLIANCE_RULES_GET_CONTEXT.replace("{kind}", kind));
 
         if (resource != null) {
-            uriBuilder.queryParam(RESOURCE_QUERY_HEADER, resource);
+            uriBuilder.queryParam(RESOURCE_QUERY_HEADER, resource.getCode());
         }
         if (type != null) {
             uriBuilder.queryParam(RESOURCE_TYPE_QUERY_HEADER, type);
@@ -96,7 +96,7 @@ public class ComplianceApiClient extends BaseApiClient implements ComplianceSync
         uriBuilder.path(COMPLIANCE_GROUPS_GET_CONTEXT.replace("{kind}", kind));
 
         if (resource != null) {
-            uriBuilder.queryParam(RESOURCE_QUERY_HEADER, resource);
+            uriBuilder.queryParam(RESOURCE_QUERY_HEADER, resource.getCode());
         }
         uri = uriBuilder.build();
         WebClient.RequestBodySpec request = prepareRequest(HttpMethod.GET, connector, true).uri(uri);

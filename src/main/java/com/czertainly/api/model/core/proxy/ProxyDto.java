@@ -27,7 +27,7 @@ public class ProxyDto extends NameAndUuidDto implements Serializable {
     private String code;
 
     @Schema(description = "Status of the Proxy",
-        examples = {"CONNECTED"},
+        examples = {"connected"},
         requiredMode = Schema.RequiredMode.REQUIRED)
     private ProxyStatus status;
 

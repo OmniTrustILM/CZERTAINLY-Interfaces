@@ -34,7 +34,7 @@ public class ComplianceApiClient implements ComplianceSyncApiClient {
         StringBuilder pathBuilder = new StringBuilder(BASE_PATH).append("/").append(kind).append("/rules");
         boolean hasQuery = false;
         if (resource != null) {
-            pathBuilder.append("?resource=").append(URLEncoder.encode(resource.toString(), StandardCharsets.UTF_8));
+            pathBuilder.append("?resource=").append(URLEncoder.encode(resource.getCode(), StandardCharsets.UTF_8));
             hasQuery = true;
         }
         if (type != null) {
@@ -64,7 +64,7 @@ public class ComplianceApiClient implements ComplianceSyncApiClient {
     public List<ComplianceGroupResponseDto> getComplianceGroups(ApiClientConnectorInfo connector, String kind, Resource resource) throws ConnectorException {
         StringBuilder pathBuilder = new StringBuilder(BASE_PATH).append("/").append(kind).append("/groups");
         if (resource != null) {
-            pathBuilder.append("?resource=").append(URLEncoder.encode(resource.toString(), StandardCharsets.UTF_8));
+            pathBuilder.append("?resource=").append(URLEncoder.encode(resource.getCode(), StandardCharsets.UTF_8));
         }
         ComplianceGroupResponseDto[] result = proxyClient.sendRequest(connector, pathBuilder.toString(), HTTP_METHOD_GET, null, ComplianceGroupResponseDto[].class);
         return Arrays.asList(result);

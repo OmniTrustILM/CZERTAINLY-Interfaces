@@ -9,6 +9,7 @@ import com.czertainly.api.model.common.attribute.common.BaseAttribute;
 import com.czertainly.api.model.common.attribute.common.callback.AttributeCallback;
 import com.czertainly.api.model.common.attribute.common.callback.RequestAttributeCallback;
 import com.czertainly.api.model.core.connector.FunctionGroupCode;
+import org.springframework.web.util.UriUtils;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
@@ -198,11 +199,12 @@ public class AttributeApiClient implements AttributeSyncApiClient {
     private String buildCallbackPath(AttributeCallback callback, RequestAttributeCallback callbackRequest) {
         String path = callback.getCallbackContext();
 
-        // Substitute path variables
+        // Substitute path variables (encoded as path segments to prevent injection of
+        // reserved characters such as '/', '?', or spaces)
         if (callbackRequest.getPathVariable() != null) {
             for (Map.Entry<String, Serializable> entry : callbackRequest.getPathVariable().entrySet()) {
                 String value = extractValue(entry.getValue());
-                path = path.replace("{" + entry.getKey() + "}", value);
+                path = path.replace("{" + entry.getKey() + "}", UriUtils.encodePathSegment(value, StandardCharsets.UTF_8));
             }
         }
 
