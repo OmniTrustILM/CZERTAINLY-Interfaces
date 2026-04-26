@@ -59,9 +59,9 @@ public enum LeapSecondWarningMessage implements IPlatformEnum {
     }
 
     public static class Codes {
-        public static final String NONE = "NONE";
-        public static final String POSITIVE = "POSITIVE";
-        public static final String NEGATIVE = "NEGATIVE";
+        public static final String NONE = "none";
+        public static final String POSITIVE = "positive";
+        public static final String NEGATIVE = "negative";
 
         private Codes() {
         }

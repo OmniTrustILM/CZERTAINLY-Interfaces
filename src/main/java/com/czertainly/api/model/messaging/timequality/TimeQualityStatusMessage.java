@@ -58,8 +58,8 @@ public enum TimeQualityStatusMessage implements IPlatformEnum {
     }
 
     public static class Codes {
-        public static final String OK = "OK";
-        public static final String DEGRADED = "DEGRADED";
+        public static final String OK = "ok";
+        public static final String DEGRADED = "degraded";
 
         private Codes() {
         }
