@@ -4,6 +4,7 @@ import com.czertainly.api.exception.AlreadyExistException;
 import com.czertainly.api.exception.AttributeException;
 import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.exception.NotFoundException;
+import com.czertainly.api.exception.ValidationException;
 import com.czertainly.api.interfaces.AuthProtectedController;
 import com.czertainly.api.model.client.approvalprofile.ApprovalProfileDto;
 import com.czertainly.api.model.client.certificate.SearchRequestDto;
@@ -84,7 +85,7 @@ public interface SigningProfileController extends AuthProtectedController {
     })
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    SigningProfileDto createSigningProfile(@RequestBody @Valid SigningProfileRequestDto request) throws AlreadyExistException, AttributeException, NotFoundException;
+    SigningProfileDto createSigningProfile(@RequestBody @Valid SigningProfileRequestDto request) throws AlreadyExistException, AttributeException, ConnectorException, NotFoundException;
 
     @Operation(operationId = "updateSigningProfile", summary = "Update Signing Profile", description = """
             Request to update an existing Signing Profile.
@@ -95,13 +96,13 @@ public interface SigningProfileController extends AuthProtectedController {
             @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)), examples = {@ExampleObject(value = "[\"Error Message 1\",\"Error Message 2\"]")})),})
     @PutMapping(path = "/{uuid}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     SigningProfileDto updateSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid, @RequestBody @Valid SigningProfileRequestDto request)
-            throws AlreadyExistException, AttributeException, NotFoundException;
+            throws AlreadyExistException, AttributeException, ConnectorException, NotFoundException;
 
     @Operation(operationId = "deleteSigningProfile", summary = "Delete Signing Profile")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Signing Profile deleted")})
     @DeleteMapping(path = "/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException;
+    void deleteSigningProfile(@Parameter(description = "Signing Profile UUID") @PathVariable UUID uuid) throws NotFoundException, ValidationException;
 
     @Operation(operationId = "bulkDeleteSigningProfiles", summary = "Delete multiple Signing Profiles")
     @ApiResponses(value = {
