@@ -73,7 +73,7 @@ jobs:
           github-token: ${{ steps.interfaces-docs-app-token.outputs.token }}
           script: |
             github.rest.actions.createWorkflowDispatch({
-              owner: 'OmniTrustILM',
+              owner: context.repo.owner,
               repo: 'interface-documentation',
               workflow_id: 'publish.yml',
               ref: 'main',
