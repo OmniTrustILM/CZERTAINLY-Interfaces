@@ -29,8 +29,8 @@ public class TimeQualityConfigurationDto extends NameAndUuidDto {
     @Schema(description = "Interval between NTP checks, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "PT30S", defaultValue = "PT30S")
     private Duration ntpCheckInterval = Duration.ofSeconds(30);
 
-    @Schema(description = "Number of NTP samples to take per server during each check", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "4", defaultValue = "4")
-    private int ntpSamplesPerServer = 4;
+    @Schema(description = "Number of NTP samples to take per server during each check", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "3", defaultValue = "3")
+    private int ntpSamplesPerServer = 3;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(description = "Timeout for a single NTP check, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "PT5S", defaultValue = "PT5S")

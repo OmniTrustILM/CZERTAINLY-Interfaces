@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * Validates that a name contains only unreserved URI characters as defined in RFC 3986:
  * alphanumeric characters (a-z, A-Z, 0-9), hyphen (-), period (.), underscore (_), and tilde (~).
  *
- * <p>Null values are considered valid — combine with {@code @NotBlank} to also reject blanks.
+ * <p>Null and empty string values are considered valid. Combine with {@code @NotBlank} to also reject null, empty, and blank values.
  */
 @Constraint(validatedBy = ValidNameValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
