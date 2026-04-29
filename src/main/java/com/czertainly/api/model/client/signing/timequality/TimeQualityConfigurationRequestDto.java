@@ -46,6 +46,7 @@ public class TimeQualityConfigurationRequestDto implements ClockDriftConfigurati
     @Schema(description = "List of NTP server addresses", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"pool.ntp.org\", \"time.google.com\"]")
     private List<String> ntpServers;
 
+    @NotNull
     @PositiveDuration
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(description = "Interval between NTP checks, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.REQUIRED, example = "PT500MS")
@@ -55,6 +56,7 @@ public class TimeQualityConfigurationRequestDto implements ClockDriftConfigurati
     @Schema(description = "Number of NTP samples to take per server during each check", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "3", defaultValue = "3")
     private int ntpSamplesPerServer = 3;
 
+    @NotNull
     @PositiveDuration
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(description = "Timeout for the entire NTP check cycle, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.REQUIRED, example = "PT200MS")
@@ -64,6 +66,7 @@ public class TimeQualityConfigurationRequestDto implements ClockDriftConfigurati
     @Schema(description = "Minimum number of NTP servers that must be reachable", requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", defaultValue = "1")
     private int ntpServersMinReachable = 1;
 
+    @NotNull
     @PositiveDuration
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Schema(description = "Maximum allowed clock drift from NTP reference time, in ISO 8601 duration format", requiredMode = Schema.RequiredMode.REQUIRED, example = "PT1S")
