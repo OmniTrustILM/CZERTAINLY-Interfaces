@@ -18,9 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * </p>
  *
  * <p>
- * The Jackson subtype registry stays on {@link DiscoveryEvent}: {@code @JsonSubTypes} on a published union makes
- * swagger-core recompose each subtype as {@code allOf: [$ref union, own fields]}, a cycle no client generator can
- * express.
+ * The Jackson subtype registry stays on {@link DiscoveryEvent}, for the reason spelled out on
+ * {@link DiscoveredItemPayloadInterface}.
  * </p>
  */
 @Schema(name = "DiscoveryEvent", description = "One flat discovery stream/AMQP event; type selects the concrete shape.",

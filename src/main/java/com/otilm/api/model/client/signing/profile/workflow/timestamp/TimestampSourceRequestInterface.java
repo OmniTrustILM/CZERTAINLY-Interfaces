@@ -1,5 +1,6 @@
 package com.otilm.api.model.client.signing.profile.workflow.timestamp;
 
+import com.otilm.api.model.connector.discovery.v2.DiscoveredItemPayloadInterface;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
@@ -8,9 +9,8 @@ import java.io.Serializable;
  * OpenAPI schema for the polymorphic {@link TimestampSourceRequestDto} hierarchy.
  *
  * <p>
- * The Jackson subtype registry stays on {@link TimestampSourceRequestDto}: {@code @JsonSubTypes} on a published union
- * makes swagger-core recompose each subtype as {@code allOf: [$ref union, own fields]}, a cycle no client generator can
- * express.
+ * The Jackson subtype registry stays on {@link TimestampSourceRequestDto}, for the reason spelled out on
+ * {@link DiscoveredItemPayloadInterface}.
  * </p>
  */
 @Schema(name = "TimestampSourceRequestDto",

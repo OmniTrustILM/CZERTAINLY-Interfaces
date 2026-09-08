@@ -92,6 +92,26 @@ class DiscoveryV2SchemaGenerationTest {
     }
 
     /**
+     * A union that published the discriminator as a property of its own would invite a client to set it there rather
+     * than on the arm it picked.
+     */
+    @Test
+    void thePayloadUnionRequiresTheDiscriminatorWithoutPublishingItAsItsOwnProperty() {
+        Schema<?> union = openApi31Schemas(DiscoveredItemPayloadDto.class).get("DiscoveredItemPayload");
+
+        assertEquals(List.of("resource"), union.getRequired());
+        assertNull(union.getProperties(), "DiscoveredItemPayload must publish no properties of its own");
+    }
+
+    @Test
+    void theEventUnionRequiresTheDiscriminatorWithoutPublishingItAsItsOwnProperty() {
+        Schema<?> union = openApi31Schemas(DiscoveryEvent.class).get("DiscoveryEvent");
+
+        assertEquals(List.of("type"), union.getRequired());
+        assertNull(union.getProperties(), "DiscoveryEvent must publish no properties of its own");
+    }
+
+    /**
      * The OpenAPI rule every generated discriminator must satisfy: {@code discriminator.propertyName} must name a
      * property present in the subschema. springdoc/swagger-core will happily generate a discriminator that fails this
      * rule, so it is checked against the generated subschema rather than assumed.
