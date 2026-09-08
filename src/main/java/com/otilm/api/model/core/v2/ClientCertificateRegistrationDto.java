@@ -99,10 +99,18 @@ public class ClientCertificateRegistrationDto {
     @Pattern(regexp = "[\\x20-\\x7E]+", message = "authorizationSecret must be printable ASCII")
     @Schema(description = "Authorization secret (challenge) that gates completion of this pre-registered "
             + "certificate. Write-only and optional — the operator supplies it to opt the registration "
-            + "into challenge-gated issuance; the platform never generates one. Challenge verification "
-            + "gates issue of this pre-registered certificate, and renew and rekey of it once issued.",
-            accessMode = Schema.AccessMode.WRITE_ONLY, requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            + "into challenge-gated issuance over the platform API, SCEP or CMP. Challenge verification "
+            + "gates issue of this pre-registered certificate, and renew and rekey of it once issued. "
+            + "Mutually exclusive with generateEabCredential.", accessMode = Schema.AccessMode.WRITE_ONLY,
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String authorizationSecret;
+
+    @Schema(description = "When true, the platform generates the registration challenge as an ACME External "
+            + "Account Binding credential and returns it once in the response (eabKid, eabHmacKey). The "
+            + "registration is then completed over ACME by an account bound with that credential. Mutually "
+            + "exclusive with authorizationSecret.", defaultValue = "false",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private boolean generateEabCredential;
 
     @Future
     @Schema(description = "Optional absolute deadline by which the completion request must be presented — a valid "
@@ -144,5 +152,12 @@ public class ClientCertificateRegistrationDto {
                 || (subjectAltName != null && !subjectAltName.isBlank())
                 || (extensions != null && !extensions.isEmpty());
         return !(structured && flat);
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "Supply authorizationSecret or set generateEabCredential, not both")
+    @Schema(hidden = true)
+    public boolean isSingleChallengeSource() {
+        return !(generateEabCredential && authorizationSecret != null);
     }
 }

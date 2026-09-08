@@ -4,6 +4,7 @@ import com.otilm.api.model.client.attribute.ResponseAttribute;
 import com.otilm.api.model.client.raprofile.SimplifiedRaProfileDto;
 import com.otilm.api.model.common.NameAndUuidDto;
 import com.otilm.api.model.core.protocol.ProtocolCertificateAssociationsDto;
+import com.otilm.api.model.core.protocol.ProtocolChallengeSource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Data;
@@ -57,6 +58,9 @@ public class AcmeProfileDto extends NameAndUuidDto {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ProtocolCertificateAssociationsDto certificateAssociations;
 
+    @Schema(description = "Source of the enrolment authorization", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ProtocolChallengeSource challengeSource;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
@@ -77,6 +81,7 @@ public class AcmeProfileDto extends NameAndUuidDto {
                 .append("issueCertificateAttributes", issueCertificateAttributes)
                 .append("revokeCertificateAttributes", revokeCertificateAttributes)
                 .append("customAttributes", customAttributes)
+                .append("challengeSource", challengeSource)
                 .toString();
     }
 }

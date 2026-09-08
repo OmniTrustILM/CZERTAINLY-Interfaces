@@ -1,5 +1,6 @@
 package com.otilm.api.model.core.v2;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.otilm.api.model.common.UuidDto;
 import com.otilm.api.model.core.logging.Loggable;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -37,12 +38,26 @@ public class ClientCertificateDataResponseDto implements Loggable {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED))
     private List<String> requestAttributeWarnings = new ArrayList<>();
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "ACME External Account Binding key identifier (the pre-registered certificate UUID). "
+            + "Present only in the response to a registration that requested generateEabCredential.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String eabKid;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "ACME External Account Binding HMAC key, base64url-encoded. Present only in the response "
+            + "to a registration that requested generateEabCredential and returned exactly once; the platform "
+            + "stores it as the registration challenge and cannot show it again.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String eabHmacKey;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("certificateData", certificateData)
                 .append("certificateUuid", uuid)
                 .append("requestAttributeWarnings", requestAttributeWarnings)
+                .append("eabKid", eabKid)
                 .toString();
     }
 

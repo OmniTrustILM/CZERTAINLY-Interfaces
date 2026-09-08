@@ -2,6 +2,7 @@ package com.otilm.api.model.client.acme;
 
 import com.otilm.api.model.client.attribute.RequestAttribute;
 import com.otilm.api.model.core.protocol.ProtocolCertificateAssociationsRequestDto;
+import com.otilm.api.model.core.protocol.ProtocolChallengeSource;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -51,6 +52,13 @@ public class AcmeProfileEditRequestDto {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ProtocolCertificateAssociationsRequestDto certificateAssociations;
 
+    @Schema(description = "Source of the enrolment authorization ('protocolDefault' or 'certificateRegistration'). "
+            + "'protocolDefault' uses ACME's standard order authorizations (domain validation); "
+            + "'certificateRegistration' authorizes orders against pre-registered certificates only. "
+            + "Omit to keep the stored value on edit; on create, omit to default to 'protocolDefault'.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private ProtocolChallengeSource challengeSource;
+
     public Boolean isRequireTermsOfService() {
         return requireTermsOfService;
     }
@@ -81,6 +89,7 @@ public class AcmeProfileEditRequestDto {
                 .append("requireContact", requireContact)
                 .append("requireTermsOfService", requireTermsOfService)
                 .append("customAttributes", customAttributes)
+                .append("challengeSource", challengeSource)
                 .toString();
     }
 }

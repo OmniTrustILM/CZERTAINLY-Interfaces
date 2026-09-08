@@ -389,6 +389,10 @@ public interface ClientOperationController extends AuthProtectedController {
             certificate is pre-registered at the platform level with no connector call, which does not imply
             a CA-side end-entity exists. Connector-side completion may be asynchronous and is tracked
             server-side.
+
+            With `generateEabCredential` the platform generates the registration challenge as an ACME
+            External Account Binding credential and returns `eabKid` and `eabHmacKey` once in this response;
+            the registration is then completed over ACME by an account bound with that credential.
             """)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Registration request accepted"),

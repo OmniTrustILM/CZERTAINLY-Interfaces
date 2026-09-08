@@ -190,6 +190,68 @@ class ClientCertificateRegistrationDtoTest {
         assertFalse(secretViolations("abcdefghijklé").isEmpty(), "a character outside printable ASCII is rejected");
     }
 
+    @Test
+    void generateEabCredentialDefaultsToFalse() {
+        assertFalse(new ClientCertificateRegistrationDto().isGenerateEabCredential());
+    }
+
+    @Test
+    void generateEabCredentialRoundTrips() throws Exception {
+        ClientCertificateRegistrationDto dto = mapper
+                .readValue("{\"subjectDn\":\"CN=x\",\"generateEabCredential\":true}",
+                        ClientCertificateRegistrationDto.class);
+        assertTrue(dto.isGenerateEabCredential());
+        assertTrue(mapper.writeValueAsString(dto).contains("\"generateEabCredential\":true"));
+    }
+
+    @Test
+    void generateEabCredentialWithAuthorizationSecret_violatesSingleChallengeSource() {
+        ClientCertificateRegistrationDto dto = new ClientCertificateRegistrationDto();
+        dto.setSubjectDn("CN=x");
+        dto.setGenerateEabCredential(true);
+        dto.setAuthorizationSecret("s3cret-value-1234");
+        assertFalse(dto.isSingleChallengeSource());
+        assertFalse(challengeSourceViolations(dto).isEmpty(),
+                "the @AssertTrue constraint must surface as a bean-validation violation");
+    }
+
+    @Test
+    void generateEabCredentialAlone_satisfiesSingleChallengeSource() {
+        ClientCertificateRegistrationDto dto = new ClientCertificateRegistrationDto();
+        dto.setSubjectDn("CN=x");
+        dto.setGenerateEabCredential(true);
+        assertTrue(dto.isSingleChallengeSource());
+        assertTrue(challengeSourceViolations(dto).isEmpty());
+    }
+
+    @Test
+    void authorizationSecretAlone_satisfiesSingleChallengeSource() {
+        ClientCertificateRegistrationDto dto = new ClientCertificateRegistrationDto();
+        dto.setSubjectDn("CN=x");
+        dto.setAuthorizationSecret("s3cret-value-1234");
+        assertTrue(dto.isSingleChallengeSource());
+        assertTrue(challengeSourceViolations(dto).isEmpty());
+    }
+
+    @Test
+    void generateEabCredentialWithWhitespaceSecret_violatesSingleChallengeSource() {
+        ClientCertificateRegistrationDto dto = new ClientCertificateRegistrationDto();
+        dto.setSubjectDn("CN=x");
+        dto.setGenerateEabCredential(true);
+        dto.setAuthorizationSecret("            ");
+        assertFalse(dto.isSingleChallengeSource(),
+                "a 12-space secret passes the size and pattern constraints, so it is a supplied secret here too");
+    }
+
+    private static Set<ConstraintViolation<ClientCertificateRegistrationDto>> challengeSourceViolations(
+            ClientCertificateRegistrationDto dto) {
+        return VALIDATOR
+                .validate(dto)
+                .stream()
+                .filter(v -> v.getPropertyPath().toString().equals("singleChallengeSource"))
+                .collect(Collectors.toSet());
+    }
+
     private static Set<ConstraintViolation<ClientCertificateRegistrationDto>> secretViolations(String secret) {
         ClientCertificateRegistrationDto dto = new ClientCertificateRegistrationDto();
         dto.setSubjectDn("CN=x");
