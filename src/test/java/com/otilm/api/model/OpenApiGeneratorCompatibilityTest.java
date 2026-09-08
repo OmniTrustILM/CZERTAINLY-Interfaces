@@ -19,6 +19,7 @@ import com.otilm.api.model.core.cryptography.key.KeyItemDetailDto;
 import com.otilm.api.model.core.cryptography.token.TokenInstanceDetailDto;
 import com.otilm.api.model.core.cryptography.tokenprofile.TokenProfileDetailDto;
 import io.swagger.v3.core.util.Json31;
+import io.swagger.v3.oas.models.media.Discriminator;
 import io.swagger.v3.oas.models.media.Schema;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import static com.otilm.api.testsupport.OpenApiProseAssertions.assertLanguageNeutral;
 import static com.otilm.api.testsupport.OpenApiProseAssertions.assertNoJargon;
 import static com.otilm.api.testsupport.OpenApiSchemaTestSupport.openApi31Schemas;
+import static com.otilm.api.testsupport.PublishedUnions.declaringClasses;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,6 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Holds the key-transfer schemas to what an OpenAPI generator can consume without hand edits: an untyped property, a
  * dangling reference or a name two schemas claim becomes broken generated code rather than a build failure here.
  * Running the generators themselves needs the assembled document; {@code scripts/openapi-generator-check.sh} does that.
+ *
+ * <p>
+ * {@link #noChildOfAPublishedUnionComposesTheUnionItBelongsTo()} is the one invariant here not scoped to those roots:
+ * it reaches every union the model package declares.
+ * </p>
  */
 class OpenApiGeneratorCompatibilityTest {
 
@@ -256,6 +263,34 @@ class OpenApiGeneratorCompatibilityTest {
         });
     }
 
+    /**
+     * An OpenAPI {@code discriminator} says a client picks its arm by reading one property, so each mapped child has to
+     * be a shape a client can build: the discriminator plus the child's own fields. A child written as
+     * {@code allOf: [{$ref: <union>}, {<own fields>}]} is instead a cycle, because the union is a {@code oneOf} over
+     * these same children — a generator flattens it into mutually recursive type aliases that carry none of the child's
+     * fields, and the emitted TypeScript fails to compile.
+     */
+    @Test
+    void noChildOfAPublishedUnionComposesTheUnionItBelongsTo() {
+        Set<String> broken = new TreeSet<>();
+        Set<String> checked = new TreeSet<>();
+
+        for (Class<?> declaring : declaringClasses()) {
+            Map<String, Schema> schemas = openApi31Schemas(declaring);
+            schemas.forEach((union, schema) -> {
+                Discriminator discriminator = schema.getDiscriminator();
+                if (discriminator == null || schema.getOneOf() == null) {
+                    return;
+                }
+                checked.add(union);
+                mappedChildren(schema).forEach(child -> auditChild(schemas, union, child, discriminator, broken));
+            });
+        }
+
+        assertTrue(broken.isEmpty(), () -> "children that a client generator cannot resolve: " + broken);
+        assertTrue(checked.size() >= 20, () -> "the scan reached almost no union at all, only " + checked);
+    }
+
     private static boolean isBlank(String text) {
         return text == null || text.isBlank();
     }
@@ -280,6 +315,48 @@ class OpenApiGeneratorCompatibilityTest {
             return schema.getType();
         }
         return schema.getTypes() == null || schema.getTypes().isEmpty() ? null : schema.getTypes().iterator().next();
+    }
+
+    private static void auditChild(Map<String, Schema> schemas, String union, String child, Discriminator discriminator,
+            Set<String> broken) {
+        Schema<?> arm = schemas.get(child);
+        String where = union + " -> " + child;
+        if (arm == null) {
+            broken.add(where + ": the union maps a child the document does not carry");
+            return;
+        }
+        if (arm.getAllOf() != null) {
+            broken.add(where + ": the child composes its own union with allOf");
+            return;
+        }
+        // A child that is itself a union carries no properties; it is audited under its own name instead.
+        if (arm.getOneOf() != null) {
+            return;
+        }
+        if (arm.getProperties() == null) {
+            broken.add(where + ": the child declares no properties of its own");
+        } else if (!arm.getProperties().containsKey(discriminator.getPropertyName())) {
+            broken.add(where + ": the child does not declare " + discriminator.getPropertyName() + " itself");
+        }
+    }
+
+    /** Every child the union names, whether the {@code mapping} or the {@code oneOf} list names it. */
+    private static Set<String> mappedChildren(Schema<?> union) {
+        Set<String> children = new TreeSet<>();
+        if (union.getDiscriminator().getMapping() != null) {
+            union.getDiscriminator().getMapping().values().forEach(reference -> children.add(schemaName(reference)));
+        }
+        union
+                .getOneOf()
+                .stream()
+                .map(Schema::get$ref)
+                .filter(Objects::nonNull)
+                .forEach(reference -> children.add(schemaName(reference)));
+        return children;
+    }
+
+    private static String schemaName(String reference) {
+        return reference.substring(reference.lastIndexOf('/') + 1);
     }
 
     private static void collectReferences(Schema<?> schema, Set<String> into) {

@@ -4,10 +4,10 @@ import com.otilm.api.exception.ValidationException;
 import com.otilm.api.model.common.enums.cryptography.DigestAlgorithm;
 import com.otilm.api.model.common.enums.cryptography.SignatureAlgorithm;
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.util.Json31;
 import io.swagger.v3.oas.models.media.Discriminator;
 import io.swagger.v3.oas.models.media.Schema;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -60,10 +61,7 @@ class ComputeDtbsSchemaGenerationTest {
         for (String subtype : List
                 .of("PadesComputeDtbsRequestDto", "XadesComputeDtbsRequestDto", "CadesComputeDtbsRequestDto",
                         "JadesComputeDtbsRequestDto")) {
-            Schema<?> schema = schemas.get(subtype);
-            assertNotNull(schema, "expected a generated schema named " + subtype + "; found " + schemas.keySet());
-            assertTrue(resolvesProperty(schema, "family", schemas),
-                    subtype + " does not declare the family discriminator property");
+            assertArmDeclares(schemas, subtype, "family");
         }
     }
 
@@ -77,12 +75,10 @@ class ComputeDtbsSchemaGenerationTest {
         for (String subtype : List
                 .of("PadesComputeDtbsRequestDto", "XadesComputeDtbsRequestDto", "CadesComputeDtbsRequestDto",
                         "JadesComputeDtbsRequestDto")) {
-            Schema<?> schema = schemas.get(subtype);
             for (String property : List
                     .of("document", "signerCertificateChain", "signingTime", "signatureAlgorithm",
                             "formattingAttributes")) {
-                assertTrue(resolvesProperty(schema, property, schemas),
-                        subtype + " does not resolve the inherited property " + property);
+                assertArmDeclares(schemas, subtype, property);
             }
         }
     }
@@ -98,7 +94,7 @@ class ComputeDtbsSchemaGenerationTest {
         for (String subtype : List
                 .of("PadesComputeDtbsRequestDto", "XadesComputeDtbsRequestDto", "CadesComputeDtbsRequestDto",
                         "JadesComputeDtbsRequestDto")) {
-            assertTrue(requiredAnywhere(schemas.get(subtype), "signatureAlgorithm", schemas),
+            assertTrue(declaresRequired(schemas.get(subtype), "signatureAlgorithm"),
                     subtype + " does not publish signatureAlgorithm as required");
         }
     }
@@ -113,7 +109,7 @@ class ComputeDtbsSchemaGenerationTest {
 
         Schema<?> embed = schemas.get("EmbedSignatureValueRequest");
         assertNotNull(embed, "expected a generated schema named EmbedSignatureValueRequest; found " + schemas.keySet());
-        assertTrue(requiredAnywhere(embed, "signatureAlgorithm", schemas),
+        assertTrue(declaresRequired(embed, "signatureAlgorithm"),
                 "EmbedSignatureValueRequest does not publish signatureAlgorithm as required");
     }
 
@@ -185,12 +181,10 @@ class ComputeDtbsSchemaGenerationTest {
         assertNotNull(standalone.getDescription(), "DocumentTransfer publishes no description at all");
         assertFalse(standalone.getDescription().isBlank(), "DocumentTransfer publishes a blank description");
 
-        assertEquals(standalone.getDescription(), viaCompute.getDescription(),
-                "DocumentTransfer's description was rewritten when reached through the computeDtbs union");
-        assertEquals(standalone.getDescription(), viaSignedDocument.getDescription(),
-                "DocumentTransfer's description was rewritten when reached through SignedDocumentRequestDto");
-        assertEquals(standalone.getProperties().keySet(), viaCompute.getProperties().keySet());
-        assertEquals(standalone.getProperties().keySet(), viaSignedDocument.getProperties().keySet());
+        assertEquals(Json31.pretty(standalone), Json31.pretty(viaCompute),
+                "DocumentTransfer is published differently when reached through the computeDtbs union");
+        assertEquals(Json31.pretty(standalone), Json31.pretty(viaSignedDocument),
+                "DocumentTransfer is published differently when reached through SignedDocumentRequestDto");
     }
 
     /**
@@ -229,12 +223,12 @@ class ComputeDtbsSchemaGenerationTest {
         assertEquals(List.of("digestAlgorithm", "documentDigest", "transferMode"),
                 schemas.get("DigestOnlyDocumentTransfer").getRequired());
 
-        assertTrue(resolvesProperty(schemas.get("InlineDocumentTransfer"), "document", schemas));
-        assertFalse(resolvesProperty(schemas.get("InlineDocumentTransfer"), "documentDigest", schemas),
+        assertArmDeclares(schemas, "InlineDocumentTransfer", "document");
+        assertFalse(declaresProperty(schemas.get("InlineDocumentTransfer"), "documentDigest"),
                 "the inline arm must not offer a digest field at all");
-        assertTrue(resolvesProperty(schemas.get("DigestOnlyDocumentTransfer"), "documentDigest", schemas));
-        assertTrue(resolvesProperty(schemas.get("DigestOnlyDocumentTransfer"), "digestAlgorithm", schemas));
-        assertFalse(resolvesProperty(schemas.get("DigestOnlyDocumentTransfer"), "document", schemas),
+        assertArmDeclares(schemas, "DigestOnlyDocumentTransfer", "documentDigest");
+        assertArmDeclares(schemas, "DigestOnlyDocumentTransfer", "digestAlgorithm");
+        assertFalse(declaresProperty(schemas.get("DigestOnlyDocumentTransfer"), "document"),
                 "the digest arm must not offer an inline document field at all");
     }
 
@@ -244,58 +238,38 @@ class ComputeDtbsSchemaGenerationTest {
         Map<String, Schema> schemas = ModelConverters.getInstance().readAll(DocumentTransferDto.class);
 
         assertEquals(Set.of("document", "transferMode"),
-                resolvedProperties(schemas.get("InlineDocumentTransfer"), schemas));
+                schemas.get("InlineDocumentTransfer").getProperties().keySet());
         assertEquals(Set.of("documentDigest", "digestAlgorithm", "transferMode"),
-                resolvedProperties(schemas.get("DigestOnlyDocumentTransfer"), schemas));
+                schemas.get("DigestOnlyDocumentTransfer").getProperties().keySet());
     }
 
-    /** The discriminator property must be resolvable from every arm, or a generated client cannot set it. */
+    /** The discriminator property must be declared on every arm, or a generated client cannot set it. */
     @Test
     void everyDocumentTransferArmDeclaresTheDiscriminatorProperty() {
         Map<String, Schema> schemas = ModelConverters.getInstance().readAll(DocumentTransferDto.class);
 
         for (String arm : List.of("InlineDocumentTransfer", "DigestOnlyDocumentTransfer")) {
-            assertTrue(resolvesProperty(schemas.get(arm), "transferMode", schemas),
-                    arm + " does not declare the transferMode discriminator property");
+            assertArmDeclares(schemas, arm, "transferMode");
         }
     }
 
     /**
-     * Walks {@code properties}, {@code $ref} and {@code allOf} the way a code generator resolves a schema.
+     * An arm has to declare the property itself: composing the union it belongs to is a cycle no generator can emit.
      */
-    private static boolean resolvesProperty(Schema<?> schema, String property, Map<String, Schema> allSchemas) {
-        if (schema == null) {
-            return false;
-        }
-        if (schema.getProperties() != null && schema.getProperties().containsKey(property)) {
-            return true;
-        }
-        if (schema.get$ref() != null) {
-            String name = schema.get$ref().substring(schema.get$ref().lastIndexOf('/') + 1);
-            return resolvesProperty(allSchemas.get(name), property, allSchemas);
-        }
-        if (schema.getAllOf() != null) {
-            return schema.getAllOf().stream().anyMatch(member -> resolvesProperty(member, property, allSchemas));
-        }
-        return false;
+    private static void assertArmDeclares(Map<String, Schema> schemas, String arm, String property) {
+        Schema<?> schema = schemas.get(arm);
+        assertNotNull(schema, "expected a generated schema named " + arm + "; found " + schemas.keySet());
+        assertNull(schema.getAllOf(), arm + " must not compose the union it is an arm of");
+        assertTrue(declaresProperty(schema, property), arm + " does not declare property '" + property + "'");
     }
 
-    /** Whether {@code property} appears in this schema's own {@code required} list or an inherited one. */
-    private static boolean requiredAnywhere(Schema<?> schema, String property, Map<String, Schema> allSchemas) {
-        if (schema == null) {
-            return false;
-        }
-        if (schema.getRequired() != null && schema.getRequired().contains(property)) {
-            return true;
-        }
-        if (schema.get$ref() != null) {
-            String name = schema.get$ref().substring(schema.get$ref().lastIndexOf('/') + 1);
-            return requiredAnywhere(allSchemas.get(name), property, allSchemas);
-        }
-        if (schema.getAllOf() != null) {
-            return schema.getAllOf().stream().anyMatch(member -> requiredAnywhere(member, property, allSchemas));
-        }
-        return false;
+    private static boolean declaresProperty(Schema<?> schema, String property) {
+        return schema != null && schema.getProperties() != null && schema.getProperties().containsKey(property);
+    }
+
+    /** Whether {@code property} appears in this schema's own {@code required} list. */
+    private static boolean declaresRequired(Schema<?> schema, String property) {
+        return schema != null && schema.getRequired() != null && schema.getRequired().contains(property);
     }
 
     /** The description the document actually publishes for the algorithm. */
@@ -317,24 +291,5 @@ class ComputeDtbsSchemaGenerationTest {
         } catch (ValidationException e) {
             return null;
         }
-    }
-
-    /** Every property a generator would resolve for this schema. */
-    private static Set<String> resolvedProperties(Schema<?> schema, Map<String, Schema> allSchemas) {
-        if (schema == null) {
-            return Set.of();
-        }
-        Set<String> properties = new HashSet<>();
-        if (schema.getProperties() != null) {
-            properties.addAll(schema.getProperties().keySet());
-        }
-        if (schema.get$ref() != null) {
-            String name = schema.get$ref().substring(schema.get$ref().lastIndexOf('/') + 1);
-            properties.addAll(resolvedProperties(allSchemas.get(name), allSchemas));
-        }
-        if (schema.getAllOf() != null) {
-            schema.getAllOf().forEach(member -> properties.addAll(resolvedProperties(member, allSchemas)));
-        }
-        return properties;
     }
 }
