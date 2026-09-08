@@ -13,8 +13,10 @@ import io.swagger.v3.oas.models.media.Schema;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
+import static com.otilm.api.testsupport.OpenApiSchemaTestSupport.openApi31Schemas;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -78,26 +80,35 @@ class DiscoveryV2SchemaGenerationTest {
         assertSubschemaDeclaresProperty(schemas, "DiscoveryErrorEvent", "type");
     }
 
+    /** A client generates against the fields that tell one payload from another; a composed subschema carries none. */
+    @Test
+    void thePayloadSubschemasPublishTheirOwnFields() {
+        Map<String, Schema> schemas = openApi31Schemas(DiscoveredItemPayloadDto.class);
+
+        assertEquals(Set.of("resource", "certificateData"),
+                schemas.get("DiscoveredCertificateDto").getProperties().keySet());
+        assertEquals(Set.of("resource", "type", "algorithm", "length", "fingerprint", "publicKeyFormat", "publicKey"),
+                schemas.get("DiscoveredKeyDto").getProperties().keySet());
+    }
+
     /**
      * The OpenAPI rule every generated discriminator must satisfy: {@code discriminator.propertyName} must name a
      * property present in the subschema. springdoc/swagger-core will happily generate a discriminator that fails this
      * rule, so it is checked against the generated subschema rather than assumed.
      *
      * <p>
-     * Verified empirically that "present" here means "resolvable across the schema graph": each concrete subtype
-     * implements the annotated base interface, so swagger-core emits it as a {@code ComposedSchema} —
-     * {@code allOf: [{$ref: <base>}, {type: object, properties: {<own
-     * fields>}}]} — with the discriminator property living on the referenced base (declared once, as the interface's
-     * own abstract accessor) rather than duplicated onto every subtype's local properties. That is the same shape the
-     * OpenAPI spec's own Pet/Cat/Dog discriminator example uses, and {@code allOf} composition is exactly how a JSON
-     * Schema validator (and codegen) resolves a property "present in" a subschema — so this walks
-     * {@code allOf}/{@code $ref} rather than checking {@link Schema#getProperties()} directly.
+     * The property has to be declared directly. A subschema must not reach it by composing the union with
+     * {@code allOf: [{$ref: <union>}, {<own fields>}]}, because the union is a {@code oneOf} over these same
+     * subschemas: the composition is a cycle, which a client generator resolves into mutually recursive type aliases
+     * carrying none of the subschema's own fields.
+     * </p>
      */
     private void assertSubschemaDeclaresProperty(Map<String, Schema> schemas, String schemaName, String property) {
         Schema<?> sub = schemas.get(schemaName);
         assertNotNull(sub, "expected a generated schema named " + schemaName + "; found " + schemas.keySet());
-        assertTrue(resolvesProperty(sub, property, schemas), schemaName + " must resolve property '" + property
-                + "' (directly or via allOf/$ref) for the " + "discriminator to be resolvable against it");
+        assertNull(sub.getAllOf(), schemaName + " must not compose the union it is a subschema of");
+        assertTrue(sub.getProperties().containsKey(property), schemaName + " must declare property '" + property
+                + "' for the discriminator to be resolvable against it");
     }
 
     /**
@@ -235,7 +246,7 @@ class DiscoveryV2SchemaGenerationTest {
 
         Schema<?> page = resolved.referencedSchemas.get("PaginationResponseDtoDiscoveryItemDto");
         assertNotNull(page, "no page component was generated");
-        assertEquals(java.util.Set.of("items", "itemsPerPage", "pageNumber", "totalPages", "totalItems"),
+        assertEquals(Set.of("items", "itemsPerPage", "pageNumber", "totalPages", "totalItems"),
                 page.getProperties().keySet(), "property order is not part of the OpenAPI contract, names are");
 
         Schema<?> payload = resolved.referencedSchemas.get("DiscoveredItemPayload");
@@ -273,7 +284,7 @@ class DiscoveryV2SchemaGenerationTest {
 
         Schema<?> page = resolved.referencedSchemas.get("PaginationResponseDtoDiscoveryMessageDto");
         assertNotNull(page, "no page component was generated");
-        assertEquals(java.util.Set.of("items", "itemsPerPage", "pageNumber", "totalPages", "totalItems"),
+        assertEquals(Set.of("items", "itemsPerPage", "pageNumber", "totalPages", "totalItems"),
                 page.getProperties().keySet(), "property order is not part of the OpenAPI contract, names are");
 
         Schema<?> severity = resolved.referencedSchemas.get("DiscoveryMessageSeverity");
